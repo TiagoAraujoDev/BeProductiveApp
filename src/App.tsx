@@ -9,5 +9,5 @@ export function App() {
       <Button variant="success" />
       <Button />
     </>
-  )
+  );
 }
