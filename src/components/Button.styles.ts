@@ -4,13 +4,13 @@ export type ButtonVariant = "primary" | "secundary" | "danger" | "success";
 
 interface ButtonContainerProps {
   variant: ButtonVariant;
-} 
+}
 
 const buttonVariants = {
   primary: "purple",
   secundary: "orange",
   danger: "red",
-  success: "green",
+  success: "green"
 };
 
 export const ButtonContainer = styled.button<ButtonContainerProps>`
@@ -19,8 +19,10 @@ export const ButtonContainer = styled.button<ButtonContainerProps>`
   border: none;
   border-radius: 2px;
   margin-right: 2px;
-  
-  ${props => {
-    return css`background-color: ${buttonVariants[props.variant]}`
+
+  ${(props) => {
+    return css`
+      background-color: ${buttonVariants[props.variant]};
+    `;
   }}
-`
+`;
