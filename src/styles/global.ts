@@ -19,6 +19,8 @@ body {
 }
 
 body, input, button, textarea {
-  font: 400 1rem 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
 }
 `
