@@ -27,9 +27,6 @@ export const FormContainer = styled.div`
   color: ${(props) => props.theme['gray-100']};
   font-size: 1.125rem;
   font-weight: bold;
-
-  input {
-  }
 `
 const BaseInput = styled.input`
   background-color: transparent;
