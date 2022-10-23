@@ -12,6 +12,29 @@ export const HistoryContainer = styled.main`
     color: ${(props) => props.theme['gray-100']};
   }
 `
+const StatusColor = {
+  yellow: 'yellow-500',
+  red: 'red-500',
+  green: 'green-500',
+} as const
+
+interface StatusProps {
+  statusColor: keyof typeof StatusColor
+}
+
+export const Status = styled.span<StatusProps>`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::before {
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: ${(props) => props.theme[StatusColor[props.statusColor]]};
+  }
+`
 
 export const HistoryList = styled.div`
   flex: 1;
