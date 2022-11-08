@@ -50,4 +50,3 @@ export const ButtonTask = styled.button`
     transition: all ease 0.2s;
   }
 `
-
