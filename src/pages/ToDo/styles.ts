@@ -3,11 +3,16 @@ import styled from 'styled-components'
 export const TaskContainer = styled.div`
   width: 80%;
   margin: 0.5rem auto;
+
+  img {
+    display: block;
+    margin: 0 auto;
+  }
 `
 
 export const TasksBox = styled.div`
   width: 100%;
-  height: 5rem;
+  height: auto;
 `
 
 export const SummaryContainer = styled.div`

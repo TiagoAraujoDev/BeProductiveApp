@@ -1,15 +1,20 @@
 import { Circle, Trash } from 'phosphor-react'
 import { TaskCardContainer } from './styles'
 
-export function TaskCard() {
+interface TaskCardProps {
+  text: string
+}
+
+export function TaskCard({ text }: TaskCardProps) {
   return (
     <TaskCardContainer>
-      <Circle size={24} color="#555" />
-      <p>
-        Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint
-        cillum sint consectetur cupidatat.
-      </p>
-      <Trash size={24} color="#555" />
+      <button>
+        <Circle size={24} color="#555" />
+      </button>
+      <p>{text}</p>
+      <button>
+        <Trash size={24} color="#555" />
+      </button>
     </TaskCardContainer>
   )
 }

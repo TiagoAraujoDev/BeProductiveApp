@@ -5,6 +5,7 @@ export const EmptyTaskContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding-top: 5rem;
 
   span {
     color: ${(props) => props.theme['gray-500']};

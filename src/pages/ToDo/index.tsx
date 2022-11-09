@@ -1,12 +1,12 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
 
+import { TaskContext } from '../../contexts/TasksContext'
+import { EmptyTask } from './components/EmptyTask'
 import { NewTaskForm } from './components/NewTaskForm'
 import { TaskCard } from './components/TaskCard'
-import { EmptyTask } from './components/EmptyTask'
-import { TaskContext } from '../../contexts/TasksContext'
 
 import {
   SummaryContainer,
@@ -25,7 +25,7 @@ const createTaskFormValidationSchema = zod.object({
 type NewTaskFormData = zod.infer<typeof createTaskFormValidationSchema>
 
 export function ToDo() {
-  const { tasks } = useContext(TaskContext)
+  const { tasks, handleCreateTask } = useContext(TaskContext)
 
   const newTaskForm = useForm<NewTaskFormData>({
     resolver: zodResolver(createTaskFormValidationSchema),
@@ -34,19 +34,23 @@ export function ToDo() {
     },
   })
 
+  const { handleSubmit } = newTaskForm
+
   console.log(tasks)
 
   return (
     <TaskContainer>
       <img src={todoLogo} alt="" />
-      <FormProvider {...newTaskForm}>
-        <NewTaskForm />
-      </FormProvider>
+      <form onSubmit={handleSubmit(handleCreateTask)} action="">
+        <FormProvider {...newTaskForm}>
+          <NewTaskForm />
+        </FormProvider>
+      </form>
       <TasksBox>
         <SummaryContainer>
           <div>
             <span>Tasks created</span>
-            <TaskCounter>0</TaskCounter>
+            <TaskCounter>{tasks.length}</TaskCounter>
           </div>
           <div>
             <span>Tasks finished</span>
@@ -55,7 +59,7 @@ export function ToDo() {
         </SummaryContainer>
         <TaskCardsBox>
           {tasks.length > 0 ? (
-            tasks.map((task) => <TaskCard key={task.id} />)
+            tasks.map((task) => <TaskCard key={task.id} text={task.content} />)
           ) : (
             <EmptyTask />
           )}
