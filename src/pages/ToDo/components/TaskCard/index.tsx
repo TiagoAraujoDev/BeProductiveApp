@@ -1,5 +1,5 @@
 import { Circle, Trash } from 'phosphor-react'
-import { TaskCardContainer } from './styles'
+import { TaskCardContainer, TaskContentContainer } from './styles'
 
 interface TaskCardProps {
   text: string
@@ -11,7 +11,7 @@ export function TaskCard({ text }: TaskCardProps) {
       <button>
         <Circle size={24} color="#555" />
       </button>
-      <p>{text}</p>
+      <TaskContentContainer>{text}</TaskContentContainer>
       <button>
         <Trash size={24} color="#555" />
       </button>
