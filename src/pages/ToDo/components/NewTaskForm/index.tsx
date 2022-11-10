@@ -16,8 +16,8 @@ export function NewTaskForm() {
         {...register('taskContent')}
       />
       <ButtonTask>
-        Task
         <PlusCircle size={24} />
+        Task
       </ButtonTask>
     </FormContainer>
   )

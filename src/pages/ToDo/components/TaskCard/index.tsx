@@ -34,7 +34,7 @@ export function TaskCard({ text, id, isTaskComplete }: TaskCardProps) {
       ) : (
         <TaskContentContainer>{text}</TaskContentContainer>
       )}
-      <button onClick={() => handleDeleteTask(id)}>
+      <button title="delete" onClick={() => handleDeleteTask(id)}>
         <Trash size={24} color="#555" />
       </button>
     </TaskCardContainer>

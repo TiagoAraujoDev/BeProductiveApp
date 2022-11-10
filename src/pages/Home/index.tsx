@@ -15,11 +15,11 @@ import {
 } from './styles'
 
 const createCycleFormValidationSchema = zod.object({
-  task: zod.string().min(1, 'Informe a tarefa!'),
+  task: zod.string().min(1, 'You need to enter a task!'),
   minutesAmount: zod
     .number()
-    .min(0, 'O valor deve ser maior que 0!')
-    .max(60, 'O valor deve ser menor que 60!'),
+    .min(0, 'The value should be bigger than 0!')
+    .max(60, 'The value should be smaller than 60!'),
 })
 
 type NewCycleFormData = zod.infer<typeof createCycleFormValidationSchema>
@@ -56,12 +56,12 @@ export function Home() {
         {activeCycle ? (
           <StopCountdownButton onClick={interruptCurrentCycle} type="button">
             <HandPalm size={24} />
-            Interromper
+            Interrupt
           </StopCountdownButton>
         ) : (
           <StartCountdownButton disabled={isSubmitDisabled} type="submit">
             <Play size={24} />
-            Começar
+            Start
           </StartCountdownButton>
         )}
       </form>

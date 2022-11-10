@@ -5,8 +5,8 @@ export function EmptyTask() {
   return (
     <EmptyTaskContainer>
       <Clipboard size={64} color="#555" />
-      <span>Você ainda não tem tarefas cadastradas</span>
-      <span>Crie tarefas e organize seus itens a fazer</span>
+      <span>You don&apos;t have created task yet!</span>
+      <span>Create a task and organize your to-do items!</span>
     </EmptyTaskContainer>
   )
 }

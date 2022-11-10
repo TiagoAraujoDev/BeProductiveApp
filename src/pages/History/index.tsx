@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns'
-import ptBr from 'date-fns/locale/pt-BR'
+// import ptBr from 'date-fns/locale/pt-BR'
 import { useContext } from 'react'
 
 import { CycleContext } from '../../contexts/CyclesContext'
@@ -12,21 +12,21 @@ export function History() {
   function formatDate(date: Date): string {
     const formatedDate = formatDistanceToNow(date, {
       addSuffix: true,
-      locale: ptBr,
+      // locale: ptBr,
     })
     return formatedDate
   }
 
   return (
     <HistoryContainer>
-      <h1>Meu histórico</h1>
+      <h1>My history</h1>
       <HistoryList>
         <table>
           <thead>
             <tr>
-              <th>Tarefas</th>
-              <th>Duração</th>
-              <th>Início</th>
+              <th>Tasks</th>
+              <th>Duration</th>
+              <th>Start</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -35,17 +35,17 @@ export function History() {
               return (
                 <tr key={cycle.id}>
                   <td>{cycle.task}</td>
-                  <td>{cycle.minutesAmount} minutos</td>
+                  <td>{cycle.minutesAmount} minutes</td>
                   <td>{formatDate(new Date(cycle.startDate))}</td>
                   <td>
                     {cycle.finishedDate && (
-                      <Status statusColor={'green'}>Concluido</Status>
+                      <Status statusColor={'green'}>Completed</Status>
                     )}
                     {cycle.interruptedDate && (
-                      <Status statusColor={'red'}>Interrompido</Status>
+                      <Status statusColor={'red'}>Interrupted</Status>
                     )}
                     {!cycle.interruptedDate && !cycle.finishedDate && (
-                      <Status statusColor={'yellow'}>Em andamento</Status>
+                      <Status statusColor={'yellow'}>In progress</Status>
                     )}
                   </td>
                 </tr>

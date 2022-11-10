@@ -16,6 +16,7 @@ export const TaskCardContainer = styled.div`
     padding: 0 0.5rem;
     background-color: transparent;
     box-shadow: none;
+    cursor: pointer;
   }
 `
 
