@@ -9,6 +9,7 @@ import { NewTaskForm } from './components/NewTaskForm'
 import { TaskCard } from './components/TaskCard'
 
 import {
+  InfoContainer,
   SummaryContainer,
   TaskCardsBox,
   TaskContainer,
@@ -25,7 +26,7 @@ const createTaskFormValidationSchema = zod.object({
 type NewTaskFormData = zod.infer<typeof createTaskFormValidationSchema>
 
 export function ToDo() {
-  const { tasks, handleCreateTask } = useContext(TaskContext)
+  const { tasks, handleCreateTask, countDoneTasks } = useContext(TaskContext)
 
   const newTaskForm = useForm<NewTaskFormData>({
     resolver: zodResolver(createTaskFormValidationSchema),
@@ -34,32 +35,44 @@ export function ToDo() {
     },
   })
 
-  const { handleSubmit } = newTaskForm
+  const { handleSubmit, reset } = newTaskForm
 
-  console.log(tasks)
+  function createTask(data: NewTaskFormData): void {
+    handleCreateTask(data)
+    reset()
+  }
 
   return (
     <TaskContainer>
       <img src={todoLogo} alt="" />
-      <form onSubmit={handleSubmit(handleCreateTask)} action="">
+      <form onSubmit={handleSubmit(createTask)} action="">
         <FormProvider {...newTaskForm}>
           <NewTaskForm />
         </FormProvider>
       </form>
       <TasksBox>
         <SummaryContainer>
-          <div>
+          <InfoContainer>
             <span>Tasks created</span>
             <TaskCounter>{tasks.length}</TaskCounter>
-          </div>
-          <div>
+          </InfoContainer>
+          <InfoContainer>
             <span>Tasks finished</span>
-            <TaskCounter>0</TaskCounter>
-          </div>
+            <TaskCounter>
+              {countDoneTasks()} de {tasks.length}
+            </TaskCounter>
+          </InfoContainer>
         </SummaryContainer>
         <TaskCardsBox>
           {tasks.length > 0 ? (
-            tasks.map((task) => <TaskCard key={task.id} text={task.content} />)
+            tasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                text={task.content}
+                id={task.id}
+                isTaskComplete={task.done}
+              />
+            ))
           ) : (
             <EmptyTask />
           )}

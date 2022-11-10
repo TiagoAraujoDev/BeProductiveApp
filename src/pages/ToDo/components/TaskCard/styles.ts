@@ -15,14 +15,20 @@ export const TaskCardContainer = styled.div`
     border: none;
     padding: 0 0.5rem;
     background-color: transparent;
+    box-shadow: none;
   }
 `
 
-// TODO: Set content position to the start of the container
-export const TaskContentContainer = styled.p`
-  /* width: 100%; */
-  /* margin: 0 auto 0.5rem 0; */
-  display: flex;
-  justify-content: flex-start;
+const TaskContentBase = styled.p`
+  width: 100%;
+  padding: 0 auto 0.5rem 0;
+`
+
+export const TaskContentContainer = styled(TaskContentBase)`
   color: ${(props) => props.theme['gray-100']};
+`
+
+export const TaskContentContainerDone = styled(TaskContentBase)`
+  text-decoration: line-through;
+  color: ${(props) => props.theme['gray-400']};
 `

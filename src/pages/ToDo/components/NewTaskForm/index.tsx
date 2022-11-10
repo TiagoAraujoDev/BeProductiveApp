@@ -1,7 +1,7 @@
 import { PlusCircle } from 'phosphor-react'
+import { useFormContext } from 'react-hook-form'
 
 import { ButtonTask, FormContainer, InputTask } from './styles'
-import { useFormContext } from 'react-hook-form'
 
 export function NewTaskForm() {
   const { register } = useFormContext()
@@ -12,6 +12,7 @@ export function NewTaskForm() {
         id="taskContent"
         type="text"
         placeholder="Add your task..."
+        autoComplete="off"
         {...register('taskContent')}
       />
       <ButtonTask>

@@ -30,6 +30,17 @@ const BaseInput = styled.input`
   &::placeholder {
     color: ${(props) => props.theme['gray-500']};
   }
+
+  &:-webkit-autofill,
+  :-webkit-autofill:hover,
+  :-webkit-autofill:focus {
+    border: none;
+    border-bottom: 2px solid ${(props) => props.theme['green-500']};
+    -webkit-text-fill-color: ${(props) => props.theme['gray-100']};
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    transition: background-color 5000s ease-in-out 0s;
+  }
 `
 
 export const TaskInput = styled(BaseInput)`

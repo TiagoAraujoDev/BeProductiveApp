@@ -35,9 +35,18 @@ export const SummaryContainer = styled.div`
 export const TaskCounter = styled.span`
   background-color: ${(props) => props.theme['gray-600']};
   color: ${(props) => props.theme['gray-300']};
+  height: 1.5rem;
   font-weight: bold;
-  border-radius: 6px;
+  font-size: 0.875rem;
+  border-radius: 99999px;
   padding: 0 0.25rem;
+  line-height: 1.5rem;
+`
+
+export const InfoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const TaskCardsBox = styled.div`

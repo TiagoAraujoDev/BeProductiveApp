@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 
 interface Task {
   id: string
@@ -14,6 +14,9 @@ interface taskFormData {
 interface TaskContextType {
   tasks: Task[]
   handleCreateTask: (data: taskFormData) => void
+  handleToggleTaskDone: (id: string) => void
+  handleDeleteTask: (id: string) => void
+  countDoneTasks: () => number
 }
 
 interface TaskContextProviderProps {
@@ -23,7 +26,14 @@ interface TaskContextProviderProps {
 export const TaskContext = createContext({} as TaskContextType)
 
 export function TasksContextProvider({ children }: TaskContextProviderProps) {
-  const [tasks, setTask] = useState<Task[]>([])
+  const [tasks, setTask] = useState<Task[]>(() => {
+    const localStorageTasks = localStorage.getItem('@Ignite-tasks:tasks/v1.0.0')
+    if (localStorageTasks) {
+      const tasksParsed = JSON.parse(localStorageTasks)
+      return tasksParsed
+    }
+    return []
+  })
 
   function handleCreateTask(data: taskFormData) {
     const id = new Date().getTime().toString()
@@ -38,8 +48,56 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     setTask([...tasks, newTask])
   }
 
+  function handleToggleTaskDone(id: string): void {
+    setTask(
+      tasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, done: !task.done }
+        } else {
+          return task
+        }
+      }),
+    )
+  }
+
+  function handleDeleteTask(id: string): void {
+    setTask(tasks.filter((task) => task.id !== id))
+  }
+
+  function countDoneTasks(): number {
+    const tasksDone = tasks.reduce((acc, task) => {
+      if (task.done) {
+        return acc + 1
+      }
+      return acc + 0
+    }, 0)
+
+    return tasksDone
+  }
+
+  useEffect(() => {
+    const taskJSON = JSON.stringify(tasks)
+    localStorage.setItem('@Ignite-tasks:tasks/v1.0.0', taskJSON)
+  }, [tasks])
+
+  useEffect(() => {
+    const localStorageTasks = localStorage.getItem('@Ignite-tasks:tasks/v1.0.0')
+    if (localStorageTasks) {
+      const tasksParsed = JSON.parse(localStorageTasks)
+      setTask(tasksParsed)
+    }
+  }, [])
+
   return (
-    <TaskContext.Provider value={{ tasks, handleCreateTask }}>
+    <TaskContext.Provider
+      value={{
+        tasks,
+        handleCreateTask,
+        handleToggleTaskDone,
+        handleDeleteTask,
+        countDoneTasks,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   )

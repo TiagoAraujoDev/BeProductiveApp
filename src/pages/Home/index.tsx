@@ -1,18 +1,18 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { HandPalm, Play } from 'phosphor-react'
 import { useContext } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { HandPalm, Play } from 'phosphor-react'
-import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
 
-import { NewCycleForm } from './components/NewCycleform'
 import { Countdown } from './components/Countdown'
+import { NewCycleForm } from './components/NewCycleform'
 
+import { CycleContext } from '../../contexts/CyclesContext'
 import {
   HomeContainer,
   StartCountdownButton,
   StopCountdownButton,
 } from './styles'
-import { CycleContext } from '../../contexts/CyclesContext'
 
 const createCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, 'Informe a tarefa!'),
