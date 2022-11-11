@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const TaskContainer = styled.div`
   width: 80%;
-  margin: 0.5rem auto;
+  margin: 0rem auto;
 
   img {
     display: block;
@@ -51,7 +51,6 @@ export const InfoContainer = styled.div`
 
 export const TaskCardsBox = styled.div`
   width: 100%;
-  height: 5rem;
   padding-top: 1rem;
   border-radius: 8px;
   border-top: 1px solid ${(props) => props.theme['gray-500']};
