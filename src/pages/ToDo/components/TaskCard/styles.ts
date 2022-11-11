@@ -22,7 +22,6 @@ export const TaskCardContainer = styled.div`
 
 const TaskContentBase = styled.p`
   width: 100%;
-  padding: 0 auto 0.5rem 0;
 `
 
 export const TaskContentContainer = styled(TaskContentBase)`
