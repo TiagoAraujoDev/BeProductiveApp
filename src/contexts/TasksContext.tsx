@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
 
-interface Task {
+export interface Task {
   id: string
   content: string
   done: boolean
@@ -79,14 +79,6 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     const taskJSON = JSON.stringify(tasks)
     localStorage.setItem('@Ignite-tasks:tasks/v1.0.0', taskJSON)
   }, [tasks])
-
-  useEffect(() => {
-    const localStorageTasks = localStorage.getItem('@Ignite-tasks:tasks/v1.0.0')
-    if (localStorageTasks) {
-      const tasksParsed = JSON.parse(localStorageTasks)
-      setTask(tasksParsed)
-    }
-  }, [])
 
   return (
     <TaskContext.Provider

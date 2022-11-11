@@ -1,7 +1,7 @@
 import { CheckCircle, Circle, Trash } from 'phosphor-react'
 import { useContext } from 'react'
 
-import { TaskContext } from '../../../../contexts/TasksContext'
+import { Task, TaskContext } from '../../../../contexts/TasksContext'
 
 import {
   TaskCardContainer,
@@ -10,31 +10,31 @@ import {
 } from './styles'
 
 interface TaskCardProps {
-  id: string
-  text: string
-  isTaskComplete: boolean
+  task: Task
 }
 
-export function TaskCard({ text, id, isTaskComplete }: TaskCardProps) {
+export function TaskCard({ task }: TaskCardProps) {
   const { handleToggleTaskDone, handleDeleteTask } = useContext(TaskContext)
+
+  const isTaskDone = task.done
 
   return (
     <TaskCardContainer>
-      {isTaskComplete ? (
-        <button onClick={() => handleToggleTaskDone(id)}>
+      {isTaskDone ? (
+        <button onClick={() => handleToggleTaskDone(task.id)}>
           <CheckCircle size={24} weight="fill" color="#00875F" />
         </button>
       ) : (
-        <button onClick={() => handleToggleTaskDone(id)}>
+        <button onClick={() => handleToggleTaskDone(task.id)}>
           <Circle size={24} color="#555" />
         </button>
       )}
-      {isTaskComplete ? (
-        <TaskContentContainerDone>{text}</TaskContentContainerDone>
+      {isTaskDone ? (
+        <TaskContentContainerDone>{task.content}</TaskContentContainerDone>
       ) : (
-        <TaskContentContainer>{text}</TaskContentContainer>
+        <TaskContentContainer>{task.content}</TaskContentContainer>
       )}
-      <button title="delete" onClick={() => handleDeleteTask(id)}>
+      <button title="delete" onClick={() => handleDeleteTask(task.id)}>
         <Trash size={24} color="#555" />
       </button>
     </TaskCardContainer>

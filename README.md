@@ -17,6 +17,8 @@
 
 <img src="./public/project_screenshots/pic_3.png">
 
+<img src="./public/project_screenshots/pic_4.png">
+
 <h3 id="pre-requisitos">Prerequisites</h3>
 
 Before starting, you will need to have the following tools installed on your machine:
@@ -37,9 +39,9 @@ Besides, it's good to have an editor to work with the code like [VSCode](https:/
 
 <h3 id="objetivo">🎯 Goals</h3>
 
-- In this project I was practing ReactJS building a modern and usefull application.
+- In this project I was practicing ReactJS building a modern and useful application.
 - To follow the market needs I was using Typescript in this app and others before this one, because the typing is a good feature to development.
-- The most import technologies used in this app was vite to create a good development enviroment and some important libraries such as react-hook-form to manage forms, zod to help with typing, immer to work with immutability in a easy way, styled-components to give styles to the app and react-router-dom to create routes.
+- The most important technologies used in this app were vite to create a good development environment and some important libraries such as react-hook-form to manage forms, zod to help with form validation and typing integration, immer to work with immutability in an easy way, styled-components to give styles to the app and react-router-dom to create routes.
 - A clean code was my main goal here. No design patterns just a readable code.
  
 <h3 id="tecnologias">🛠 technologies</h3>

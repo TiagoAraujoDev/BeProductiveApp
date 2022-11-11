@@ -42,6 +42,8 @@ export function ToDo() {
     reset()
   }
 
+  const totalTasksCount = tasks.length
+
   return (
     <TaskContainer>
       <img src={todoLogo} alt="" />
@@ -54,25 +56,18 @@ export function ToDo() {
         <SummaryContainer>
           <InfoContainer>
             <span>Tasks created</span>
-            <TaskCounter>{tasks.length}</TaskCounter>
+            <TaskCounter>{totalTasksCount}</TaskCounter>
           </InfoContainer>
           <InfoContainer>
             <span>Tasks finished</span>
             <TaskCounter>
-              {countDoneTasks()} de {tasks.length}
+              {countDoneTasks()} de {totalTasksCount}
             </TaskCounter>
           </InfoContainer>
         </SummaryContainer>
         <TaskCardsBox>
           {tasks.length > 0 ? (
-            tasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                text={task.content}
-                id={task.id}
-                isTaskComplete={task.done}
-              />
-            ))
+            tasks.map((task) => <TaskCard key={task.id} task={task} />)
           ) : (
             <EmptyTask />
           )}
