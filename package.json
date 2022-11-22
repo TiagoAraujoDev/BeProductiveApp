@@ -1,7 +1,9 @@
 {
-  "name": "ignite-timer",
+  "name": "focus-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "An application to increase productivity",
+  "author": "tiago araujo",
   "type": "module",
   "scripts": {
     "dev": "vite",
