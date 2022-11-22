@@ -1,21 +1,19 @@
-import { ThemeProvider } from 'styled-components'
-
 import { CycleContextProvider } from './contexts/CyclesContext'
 import { TasksContextProvider } from './contexts/TasksContext'
+import { Theme } from './contexts/ThemeContext'
 import { Router } from './Router'
 
 import { GlobalStyle } from './styles/global'
-import { defaultTheme } from './styles/themes/default'
 
 export function App() {
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <TasksContextProvider>
-        <CycleContextProvider>
+    <TasksContextProvider>
+      <CycleContextProvider>
+        <Theme>
           <Router />
-        </CycleContextProvider>
-      </TasksContextProvider>
-      <GlobalStyle />
-    </ThemeProvider>
+          <GlobalStyle />
+        </Theme>
+      </CycleContextProvider>
+    </TasksContextProvider>
   )
 }

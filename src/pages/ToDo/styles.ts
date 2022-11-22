@@ -39,7 +39,7 @@ export const TaskCounter = styled.span`
   font-weight: bold;
   font-size: 0.875rem;
   border-radius: 99999px;
-  padding: 0 0.25rem;
+  padding: 0 0.25rem 0 0.2rem;
   line-height: 1.5rem;
 `
 
