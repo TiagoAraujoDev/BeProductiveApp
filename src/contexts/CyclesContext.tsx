@@ -45,7 +45,7 @@ export function CycleContextProvider({ children }: CycleContextProviderProps) {
     },
     () => {
       const storageCycleStateJSON = localStorage.getItem(
-        '@ignite-timer:cycle-state/v1.0.0',
+        '@focus:cycle-state/v1.0.0',
       )
 
       if (storageCycleStateJSON) {
@@ -72,7 +72,7 @@ export function CycleContextProvider({ children }: CycleContextProviderProps) {
   useEffect(() => {
     const cycleStateJSON = JSON.stringify(cyclesState)
 
-    localStorage.setItem('@ignite-timer:cycle-state/v1.0.0', cycleStateJSON)
+    localStorage.setItem('@focus:cycle-state/v1.0.0', cycleStateJSON)
   }, [cyclesState])
 
   function createNewCycle(data: CycleFormData) {

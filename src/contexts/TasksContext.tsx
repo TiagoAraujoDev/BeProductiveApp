@@ -27,7 +27,7 @@ export const TaskContext = createContext({} as TaskContextType)
 
 export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const [tasks, setTask] = useState<Task[]>(() => {
-    const localStorageTasks = localStorage.getItem('@Ignite-tasks:tasks/v1.0.0')
+    const localStorageTasks = localStorage.getItem('@focus:tasks/v1.0.0')
     if (localStorageTasks) {
       const tasksParsed = JSON.parse(localStorageTasks)
       return tasksParsed
@@ -77,7 +77,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
 
   useEffect(() => {
     const taskJSON = JSON.stringify(tasks)
-    localStorage.setItem('@Ignite-tasks:tasks/v1.0.0', taskJSON)
+    localStorage.setItem('@focus:tasks/v1.0.0', taskJSON)
   }, [tasks])
 
   return (
