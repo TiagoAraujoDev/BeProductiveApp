@@ -1,9 +1,11 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export interface Task {
   id: string
-  content: string
+  title: string
   done: boolean
+  updatedAt: Date | null
   createdAt: Date
 }
 
@@ -13,10 +15,12 @@ interface taskFormData {
 
 interface TaskContextType {
   tasks: Task[]
+  taskTitle: string
   handleCreateTask: (data: taskFormData) => void
   handleToggleTaskDone: (id: string) => void
   handleDeleteTask: (id: string) => void
   countDoneTasks: () => number
+  handleSetTaskTitleInTimer: (title: string) => void
 }
 
 interface TaskContextProviderProps {
@@ -26,8 +30,12 @@ interface TaskContextProviderProps {
 export const TaskContext = createContext({} as TaskContextType)
 
 export function TasksContextProvider({ children }: TaskContextProviderProps) {
+  const navigate = useNavigate()
+
+  const [taskTitle, setTaskTitle] = useState('')
   const [tasks, setTask] = useState<Task[]>(() => {
     const localStorageTasks = localStorage.getItem('@focus:tasks/v1.0.0')
+
     if (localStorageTasks) {
       const tasksParsed = JSON.parse(localStorageTasks)
       return tasksParsed
@@ -35,13 +43,19 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     return []
   })
 
+  function handleSetTaskTitleInTimer(taskTitle: string) {
+    setTaskTitle(taskTitle)
+    navigate('/')
+  }
+
   function handleCreateTask(data: taskFormData) {
     const id = new Date().getTime().toString()
 
     const newTask = {
       id,
-      content: data.taskContent,
+      title: data.taskContent,
       done: false,
+      updatedAt: null,
       createdAt: new Date(),
     }
 
@@ -52,7 +66,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     setTask(
       tasks.map((task) => {
         if (task.id === id) {
-          return { ...task, done: !task.done }
+          return { ...task, done: !task.done, updatedAt: new Date() }
         } else {
           return task
         }
@@ -84,10 +98,12 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     <TaskContext.Provider
       value={{
         tasks,
+        taskTitle,
         handleCreateTask,
         handleToggleTaskDone,
         handleDeleteTask,
         countDoneTasks,
+        handleSetTaskTitleInTimer,
       }}
     >
       {children}
