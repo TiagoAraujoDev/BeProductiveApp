@@ -4,20 +4,12 @@ export const TaskCardContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  /* gap: 0rem; */
   height: 4rem;
   border-radius: 8px;
   padding: 0 0.5rem;
   margin-bottom: 1rem;
   background-color: ${(props) => props.theme['gray-800']};
-
-  button {
-    border: none;
-    padding: 0 0.5rem;
-    background-color: transparent;
-    box-shadow: none;
-    cursor: pointer;
-  }
 `
 
 const TaskContentBase = styled.p`
@@ -31,4 +23,39 @@ export const TaskContentContainer = styled(TaskContentBase)`
 export const TaskContentContainerDone = styled(TaskContentBase)`
   text-decoration: line-through;
   color: ${(props) => props.theme['gray-400']};
+`
+
+const BaseButton = styled.button`
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+`
+export const CheckButton = styled(BaseButton)`
+  padding: 0rem 0.5rem;
+  line-height: 0;
+`
+
+export const PlayButton = styled(BaseButton)`
+  margin-right: 0.5rem;
+  line-height: 0;
+
+  svg {
+    color: ${(props) => props.theme['gray-500']};
+    &:hover {
+      color: ${(props) => props.theme['green-500']};
+    }
+  }
+`
+
+export const TrashButton = styled(BaseButton)`
+  margin-right: 0.5rem;
+  line-height: 0;
+
+  svg {
+    color: ${(props) => props.theme['gray-500']};
+    &:hover {
+      color: ${(props) => props.theme['red-500']};
+    }
+  }
 `
