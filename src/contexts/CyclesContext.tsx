@@ -15,8 +15,8 @@ import {
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
 
 interface CycleFormData {
-  task?: string
-  minutesAmount?: number
+  task: string
+  minutesAmount: number
 }
 
 interface CycleContextType {
