@@ -44,6 +44,7 @@ export const PlayButton = styled(BaseButton)`
     color: ${(props) => props.theme['gray-500']};
     &:hover {
       color: ${(props) => props.theme['green-500']};
+      transition: color 0.2s ease;
     }
   }
 `
@@ -56,6 +57,7 @@ export const TrashButton = styled(BaseButton)`
     color: ${(props) => props.theme['gray-500']};
     &:hover {
       color: ${(props) => props.theme['red-500']};
+      transition: color 0.2s ease;
     }
   }
 `
