@@ -19,18 +19,31 @@ export function SessionContextProvider({
   const registerUser = async () => {
     try {
       const newUser = {
-        name: 'Andre Souto',
-        username: 'zigzig',
-        email: 'asazig@gmail.com',
-        password: 'r2x2q4f2',
+        name: 'Lucca souto',
+        username: 'new',
+        email: 'iasa@hotmail.com',
+        password: 'iureyt',
       }
 
-      const response = await api.post('/users', newUser)
+      const response = await fetch('https://apifocus.up.railway.app/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(newUser),
+      })
 
-      console.log(response.data)
+      const data = await response.json()
+
+      /*       const response = await api.post('/users', newUser, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      }) */
+
+      console.log(data)
     } catch (err: any) {
       console.log(err.response.data.message)
-      console.log(err.response)
     }
   }
 

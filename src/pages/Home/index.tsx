@@ -5,7 +5,7 @@ import { SessionContext } from '../../contexts/SessionContext'
 export function Home() {
   const { registerUser } = useContext(SessionContext)
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     registerUser()
   }
 
