@@ -7,7 +7,7 @@ export const HeroContainer = styled.section`
   flex-direction: column;
   border-right: 1px solid ${(props) => props.theme['gray-600']};
   padding-right: 1.5rem;
-  width: 35rem;
+  max-width: 35rem;
 
   h1 {
     font-size: 3rem;

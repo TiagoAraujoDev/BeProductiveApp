@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import { useAuth } from './hooks/useAuth'
 
 import { DefaultLayout } from './layouts/DefaultLayouts'
 import { HomeLayout } from './layouts/HomeLayout'
@@ -9,10 +10,10 @@ import { Timer } from './pages/Timer'
 import { ToDo } from './pages/ToDo'
 
 export function Router() {
-  const isLogged = false
+  const { auth } = useAuth()
   return (
     <Routes>
-      {isLogged ? (
+      {auth ? (
         <Route path="/" element={<DefaultLayout />}>
           <Route path="/" element={<Timer />} />
           <Route path="/history" element={<History />} />
@@ -20,8 +21,8 @@ export function Router() {
         </Route>
       ) : (
         <Route path="/" element={<HomeLayout />}>
-          <Route path="/" element={<SignUp />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
         </Route>
       )}
     </Routes>
