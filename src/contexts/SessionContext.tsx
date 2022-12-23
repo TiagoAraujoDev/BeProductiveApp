@@ -1,8 +1,13 @@
 import { createContext, ReactNode, useState } from 'react'
 
-interface newUserFormData {
+interface NewUserFormData {
   name: string
   username: string
+  email: string
+  password: string
+}
+
+interface SignInFormData {
   email: string
   password: string
 }
@@ -31,7 +36,7 @@ interface SessionContextProviderProps {
 
 interface SessionContextType {
   auth: Auth | undefined
-  registerNewUser: (data: newUserFormData) => Promise<void>
+  registerNewUser: (data: NewUserFormData) => Promise<void>
   authUser: (data: any) => Promise<void>
 }
 
@@ -43,7 +48,7 @@ export function SessionContextProvider({
   const [auth, setAuth] = useState<Auth>()
   const [user, setUser] = useState<User>()
 
-  const registerNewUser = async (data: newUserFormData) => {
+  const registerNewUser = async (data: NewUserFormData) => {
     try {
       const response = await fetch('https://apifocus.up.railway.app/users', {
         method: 'POST',
@@ -63,7 +68,7 @@ export function SessionContextProvider({
     }
   }
 
-  const authUser = async (data: any) => {
+  const authUser = async (data: SignInFormData) => {
     try {
       const response = await fetch(
         'https://apifocus.up.railway.app/users/login',
@@ -80,7 +85,9 @@ export function SessionContextProvider({
       const responseData: Auth = await response.json()
       setAuth(responseData)
       console.log(responseData)
-    } catch (error: any) {}
+    } catch (error: any) {
+      console.log(error.response.message)
+    }
   }
 
   return (

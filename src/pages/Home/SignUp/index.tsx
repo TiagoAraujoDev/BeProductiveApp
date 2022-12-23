@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
@@ -18,11 +18,12 @@ const registerNewUserFormSchema = zod.object({
     .max(24, 'Password most have a limit of 24 characters!'),
 })
 
-type registerNewUserFormData = zod.infer<typeof registerNewUserFormSchema>
+type RegisterNewUserFormData = zod.infer<typeof registerNewUserFormSchema>
 
 export function SignUp() {
+  const navigate = useNavigate()
   const { registerNewUser } = useContext(SessionContext)
-  const newUserForm = useForm<registerNewUserFormData>({
+  const newUserForm = useForm<RegisterNewUserFormData>({
     resolver: zodResolver(registerNewUserFormSchema),
     defaultValues: {
       name: '',
@@ -32,11 +33,17 @@ export function SignUp() {
     },
   })
 
-  const { register, watch, reset, handleSubmit } = newUserForm
+  const {
+    register,
+    formState: { isSubmitting },
+    reset,
+    handleSubmit,
+  } = newUserForm
 
-  const handleSignIn = (data: registerNewUserFormData) => {
-    registerNewUser(data)
+  const handleSignIn = async (data: RegisterNewUserFormData) => {
+    await registerNewUser(data)
     reset()
+    navigate('/')
   }
 
   return (
@@ -66,7 +73,9 @@ export function SignUp() {
           placeholder="Password"
           {...register('password')}
         />
-        <button type="submit">Sign up</button>
+        <button type="submit" disabled={isSubmitting}>
+          Sign up
+        </button>
       </Form>
       <span>Already has an account?</span>
       <NavLink to={'/'}>Sign in</NavLink>

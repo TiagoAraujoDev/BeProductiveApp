@@ -75,8 +75,12 @@ export const Form = styled.form`
     background-color: ${(props) => props.theme['green-500']};
     cursor: pointer;
 
-    &:hover {
+    &:not(:disabled):hover {
       filter: brightness(0.8);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
     }
   }
 `
