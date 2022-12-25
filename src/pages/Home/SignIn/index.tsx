@@ -1,10 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { NavLink } from 'react-router-dom'
 import * as zod from 'zod'
 
-import { SessionContext } from '../../contexts/SessionContext'
+import { useAuth } from '../../../hooks/useAuth'
 
 import { Form, FormContainer } from './styles'
 
@@ -16,7 +15,7 @@ const signInUserFormSchema = zod.object({
 type SignUserFormData = zod.infer<typeof signInUserFormSchema>
 
 export function SignIn() {
-  const { authUser } = useContext(SessionContext)
+  const { authUser, errorMessage } = useAuth()
   const signInUserFormData = useForm<SignUserFormData>({
     resolver: zodResolver(signInUserFormSchema),
     defaultValues: {
@@ -53,6 +52,9 @@ export function SignIn() {
           placeholder="Password"
           {...register('password')}
         />
+        {errorMessage ? (
+          <span style={{ color: 'red' }}>{errorMessage}</span>
+        ) : null}
         <button type="submit" disabled={isSubmitting}>
           Sign in
         </button>

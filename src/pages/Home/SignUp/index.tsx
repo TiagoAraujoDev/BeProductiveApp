@@ -1,10 +1,9 @@
-import { useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
-import { SessionContext } from '../../../contexts/SessionContext'
+import { useAuth } from '../../../hooks/useAuth'
 
 import { Form, FormContainer } from './styles'
 
@@ -22,7 +21,7 @@ type RegisterNewUserFormData = zod.infer<typeof registerNewUserFormSchema>
 
 export function SignUp() {
   const navigate = useNavigate()
-  const { registerNewUser } = useContext(SessionContext)
+  const { registerNewUser } = useAuth()
   const newUserForm = useForm<RegisterNewUserFormData>({
     resolver: zodResolver(registerNewUserFormSchema),
     defaultValues: {

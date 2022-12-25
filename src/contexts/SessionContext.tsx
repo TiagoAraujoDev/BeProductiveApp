@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useState } from 'react'
+import { api } from '../config/api/axios'
 
 interface NewUserFormData {
   name: string
@@ -36,6 +37,7 @@ interface SessionContextProviderProps {
 
 interface SessionContextType {
   auth: Auth | undefined
+  errorMessage: string
   registerNewUser: (data: NewUserFormData) => Promise<void>
   authUser: (data: any) => Promise<void>
 }
@@ -47,51 +49,59 @@ export function SessionContextProvider({
 }: SessionContextProviderProps) {
   const [auth, setAuth] = useState<Auth>()
   const [user, setUser] = useState<User>()
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const registerNewUser = async (data: NewUserFormData) => {
     try {
-      const response = await fetch('https://apifocus.up.railway.app/users', {
-        method: 'POST',
+      const response = await api.post('/users', data, {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
-        body: JSON.stringify(data),
+        withCredentials: true,
       })
 
-      const responseData: User = await response.json()
+      const responseData: User = await response.data
+
       const { avatar, password, created_at: createdAt, ...user } = responseData
+
       setUser(user)
-      console.log(user)
     } catch (err: any) {
-      console.log(err.response.data.message)
+      switch (err.response.status) {
+        case 400:
+          setErrorMessage(err.response.data.message)
+          break
+        default:
+          setErrorMessage('Unexpected Error!')
+      }
     }
   }
 
   const authUser = async (data: SignInFormData) => {
     try {
-      const response = await fetch(
-        'https://apifocus.up.railway.app/users/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify(data),
+      const response = await api.post('/users/login', data, {
+        headers: {
+          'Content-Type': 'application/json',
         },
-      )
+        withCredentials: true,
+      })
 
-      const responseData: Auth = await response.json()
+      const responseData: Auth = await response.data
       setAuth(responseData)
-      console.log(responseData)
-    } catch (error: any) {
-      console.log(error.response.message)
+    } catch (err: any) {
+      switch (err.response.status) {
+        case 400:
+          setErrorMessage(err.response.data.message)
+          break
+        default:
+          setErrorMessage('Unexpected Error!')
+      }
     }
   }
 
   return (
-    <SessionContext.Provider value={{ registerNewUser, authUser, auth }}>
+    <SessionContext.Provider
+      value={{ registerNewUser, authUser, auth, errorMessage }}
+    >
       {children}
     </SessionContext.Provider>
   )
