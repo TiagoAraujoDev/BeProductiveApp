@@ -18,7 +18,7 @@ export const FormContainer = styled.section`
     margin-bottom: 1rem;
   }
 
-  span {
+  > span {
     color: ${(props) => props.theme['gray-300']};
   }
 `
@@ -83,4 +83,9 @@ export const Form = styled.form`
       cursor: not-allowed;
     }
   }
+`
+export const ErrorContainer = styled.span`
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: ${(props) => props.theme['red-500']};
 `

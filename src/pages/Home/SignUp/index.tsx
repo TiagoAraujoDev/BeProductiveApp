@@ -5,25 +5,27 @@ import * as zod from 'zod'
 
 import { useAuth } from '../../../hooks/useAuth'
 
-import { Form, FormContainer } from './styles'
+import { ErrorContainer, Form, FormContainer } from './styles'
 
 const registerNewUserFormSchema = zod.object({
-  name: zod.string().min(3, 'Enter at least your first name!'),
-  username: zod.string().min(3, 'Enter at least 3 characters'),
-  email: zod.string().email(),
+  name: zod.string().min(1, 'Field required!'),
+  username: zod.string().min(1, 'Field required!'),
+  email: zod.string().email('Invalid email!'),
   password: zod
     .string()
-    .min(6, 'Password most have at least 6 characters!')
-    .max(24, 'Password most have a limit of 24 characters!'),
+    .min(6, 'Require 6 characters at least!')
+    .max(24, 'Maximum of 24 characters!'),
 })
 
 type RegisterNewUserFormData = zod.infer<typeof registerNewUserFormSchema>
 
 export function SignUp() {
   const navigate = useNavigate()
-  const { registerNewUser } = useAuth()
+  const { registerNewUser, statusOk, errorMessage } = useAuth()
   const newUserForm = useForm<RegisterNewUserFormData>({
     resolver: zodResolver(registerNewUserFormSchema),
+    mode: 'all',
+    shouldFocusError: true,
     defaultValues: {
       name: '',
       username: '',
@@ -34,7 +36,7 @@ export function SignUp() {
 
   const {
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     reset,
     handleSubmit,
   } = newUserForm
@@ -42,7 +44,7 @@ export function SignUp() {
   const handleSignIn = async (data: RegisterNewUserFormData) => {
     await registerNewUser(data)
     reset()
-    navigate('/')
+    if (statusOk) navigate('/')
   }
 
   return (
@@ -51,6 +53,7 @@ export function SignUp() {
       <Form onSubmit={handleSubmit(handleSignIn)}>
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" placeholder="Name" {...register('name')} />
+        {errors.name && <ErrorContainer>{errors.name?.message}</ErrorContainer>}
         <label htmlFor="username">Username:</label>
         <input
           type="text"
@@ -58,6 +61,9 @@ export function SignUp() {
           placeholder="Username"
           {...register('username')}
         />
+        {errors.username && (
+          <ErrorContainer>{errors.username?.message}</ErrorContainer>
+        )}
         <label htmlFor="email">Email:</label>
         <input
           type="text"
@@ -65,6 +71,9 @@ export function SignUp() {
           placeholder="Email"
           {...register('email')}
         />
+        {errors.email && (
+          <ErrorContainer>{errors.email?.message}</ErrorContainer>
+        )}
         <label htmlFor="password">Password:</label>
         <input
           type="password"
@@ -72,6 +81,10 @@ export function SignUp() {
           placeholder="Password"
           {...register('password')}
         />
+        {errors.password && (
+          <ErrorContainer>{errors.password?.message}</ErrorContainer>
+        )}
+        {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
         <button type="submit" disabled={isSubmitting}>
           Sign up
         </button>
