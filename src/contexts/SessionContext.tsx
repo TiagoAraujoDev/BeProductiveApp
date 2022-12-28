@@ -41,6 +41,7 @@ interface SessionContextType {
   statusOk: boolean
   registerNewUser: (data: NewUserFormData) => Promise<void>
   authUser: (data: any) => Promise<void>
+  updateAuthToken: (token: string) => void
 }
 
 export const SessionContext = createContext({} as SessionContextType)
@@ -101,9 +102,30 @@ export function SessionContextProvider({
     }
   }
 
+  const updateAuthToken = (token: string): void => {
+    setAuth((state) => {
+      console.log(auth)
+      console.log(token)
+
+      if (state) {
+        return {
+          ...state,
+          token,
+        }
+      }
+    })
+  }
+
   return (
     <SessionContext.Provider
-      value={{ registerNewUser, authUser, auth, errorMessage, statusOk }}
+      value={{
+        registerNewUser,
+        authUser,
+        auth,
+        errorMessage,
+        statusOk,
+        updateAuthToken,
+      }}
     >
       {children}
     </SessionContext.Provider>

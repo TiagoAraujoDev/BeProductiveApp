@@ -1,5 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useApiPrivate } from '../hooks/useAxiosPrivate'
+import { useRefreshToken } from '../hooks/useRefreshToken'
 
 export interface Task {
   id: string
@@ -31,8 +33,10 @@ export const TaskContext = createContext({} as TaskContextType)
 
 export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const navigate = useNavigate()
+  const apiPrivate = useApiPrivate()
 
   const [taskTitle, setTaskTitle] = useState('')
+  // const [tasks, setTask] = useState<Task[]>()
   const [tasks, setTask] = useState<Task[]>(() => {
     const localStorageTasks = localStorage.getItem('@focus:tasks/v1.0.0')
 
@@ -42,6 +46,33 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     }
     return []
   })
+
+  //  TODO: setTasks
+  useEffect(() => {
+    let isMounted = true
+    const controller = new AbortController()
+
+    const getTasks = async () => {
+      try {
+        const response = await apiPrivate.get('/tasks/user', {
+          signal: controller.signal,
+          withCredentials: true,
+        })
+
+        console.log(response.data)
+        // isMounted && setTask(response.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    getTasks()
+
+    return () => {
+      isMounted = false
+      controller.abort()
+    }
+  }, [apiPrivate])
 
   function handleSetTaskTitleInTimer(taskTitle: string) {
     setTaskTitle(taskTitle)
