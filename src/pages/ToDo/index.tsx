@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
@@ -25,8 +25,9 @@ const createTaskFormValidationSchema = zod.object({
 
 type NewTaskFormData = zod.infer<typeof createTaskFormValidationSchema>
 
-export function ToDo() {
-  const { tasks, handleCreateTask, countDoneTasks } = useContext(TaskContext)
+export const ToDo = () => {
+  const { tasks, handleCreateTask, countDoneTasks, fetchTasks } =
+    useContext(TaskContext)
 
   const newTaskForm = useForm<NewTaskFormData>({
     resolver: zodResolver(createTaskFormValidationSchema),
@@ -43,6 +44,18 @@ export function ToDo() {
   }
 
   const totalTasksCount = tasks.length
+
+  useEffect(() => {
+    let isMounted = true
+    const controller = new AbortController()
+
+    fetchTasks(controller, isMounted)
+
+    return () => {
+      isMounted = false
+      controller.abort()
+    }
+  })
 
   return (
     <TaskContainer>

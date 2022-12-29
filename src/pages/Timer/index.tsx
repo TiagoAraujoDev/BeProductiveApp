@@ -24,8 +24,7 @@ const createCycleFormValidationSchema = zod.object({
 
 type NewCycleFormData = zod.infer<typeof createCycleFormValidationSchema>
 
-export function Timer() {
-  const taskRef = useRef('')
+export const Timer = () => {
   const { createNewCycle, interruptCurrentCycle, activeCycle } =
     useContext(CycleContext)
 

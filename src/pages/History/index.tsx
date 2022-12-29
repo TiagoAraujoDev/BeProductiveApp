@@ -6,7 +6,7 @@ import { CycleContext } from '../../contexts/CyclesContext'
 
 import { HistoryContainer, HistoryList, Status } from './styles'
 
-export function History() {
+export const History = () => {
   const { cycles } = useContext(CycleContext)
 
   function formatDate(date: Date): string {

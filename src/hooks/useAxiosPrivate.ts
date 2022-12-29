@@ -11,12 +11,13 @@ export const useApiPrivate = () => {
   useEffect(() => {
     const requestIntercept = apiPrivate.interceptors.request.use(
       (config) => {
-        if (!config?.headers!.Authorization) {
+        if (!config?.headers?.Authorization) {
           config.headers!.Authorization = `Bearer ${auth?.token}`
         }
         return config
       },
       (error) => {
+        console.log('error => req')
         return Promise.reject(error)
       },
     )
@@ -39,7 +40,7 @@ export const useApiPrivate = () => {
 
     return () => {
       apiPrivate.interceptors.request.eject(requestIntercept)
-      apiPrivate.interceptors.request.eject(responseIntercept)
+      apiPrivate.interceptors.response.eject(responseIntercept)
     }
   }, [auth, refresh])
 

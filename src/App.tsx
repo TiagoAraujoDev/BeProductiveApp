@@ -6,7 +6,7 @@ import { Router } from './Router'
 
 import { GlobalStyle } from './styles/global'
 
-export function App() {
+export const App = () => {
   return (
     <SessionContextProvider>
       <TasksContextProvider>

@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom'
-import { useAuth } from './hooks/useAuth'
 
 import { DefaultLayout } from './layouts/DefaultLayouts'
 import { HomeLayout } from './layouts/HomeLayout'
@@ -8,23 +7,29 @@ import { SignUp } from './pages/Home/SignUp'
 import { SignIn } from './pages/Home/SignIn'
 import { Timer } from './pages/Timer'
 import { ToDo } from './pages/ToDo'
+import { PersistSession } from './components/PersistSession'
+import { AuthRoute } from './components/AuthRoute'
 
-export function Router() {
-  const { auth } = useAuth()
+export const Router = () => {
   return (
     <Routes>
-      {auth?.user ? (
+      <Route element={<PersistSession />}>
         <Route path="/" element={<DefaultLayout />}>
-          <Route path="/" element={<Timer />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/ToDo" element={<ToDo />} />
+          <Route element={<AuthRoute />}>
+            <Route path="/" element={<Timer />} />
+          </Route>
+          <Route element={<AuthRoute />}>
+            <Route path="/history" element={<History />} />
+          </Route>
+          <Route element={<AuthRoute />}>
+            <Route path="/todo" element={<ToDo />} />
+          </Route>
         </Route>
-      ) : (
-        <Route path="/" element={<HomeLayout />}>
-          <Route path="/" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Route>
-      )}
+      </Route>
+      <Route path="/" element={<HomeLayout />}>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Route>
     </Routes>
   )
 }

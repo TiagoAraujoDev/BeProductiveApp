@@ -36,7 +36,9 @@ interface CycleContextProviderProps {
 
 export const CycleContext = createContext({} as CycleContextType)
 
-export function CycleContextProvider({ children }: CycleContextProviderProps) {
+export const CycleContextProvider = ({
+  children,
+}: CycleContextProviderProps) => {
   const [cyclesState, dispatch] = useReducer(
     cyclesReducer,
     {

@@ -4,7 +4,7 @@ import { Header } from '../../components/Header'
 
 import { LayoutContainer } from './styles'
 
-export function DefaultLayout() {
+export const DefaultLayout = () => {
   return (
     <LayoutContainer>
       <Header />

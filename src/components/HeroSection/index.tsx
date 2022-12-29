@@ -1,6 +1,6 @@
 import { HeroContainer } from './styles'
 
-export function HeroSection() {
+export const HeroSection = () => {
   return (
     <HeroContainer>
       <h1>Focus app</h1>

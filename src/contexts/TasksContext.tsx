@@ -1,7 +1,6 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { createContext, ReactNode, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
-import { useRefreshToken } from '../hooks/useRefreshToken'
 
 export interface Task {
   id: string
@@ -23,6 +22,7 @@ interface TaskContextType {
   handleDeleteTask: (id: string) => void
   countDoneTasks: () => number
   handleSetTaskTitleInTimer: (title: string) => void
+  fetchTasks: (controller: AbortController, isMounted: boolean) => void
 }
 
 interface TaskContextProviderProps {
@@ -33,46 +33,36 @@ export const TaskContext = createContext({} as TaskContextType)
 
 export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const navigate = useNavigate()
+  const location = useLocation()
   const apiPrivate = useApiPrivate()
 
   const [taskTitle, setTaskTitle] = useState('')
-  // const [tasks, setTask] = useState<Task[]>()
-  const [tasks, setTask] = useState<Task[]>(() => {
-    const localStorageTasks = localStorage.getItem('@focus:tasks/v1.0.0')
+  const [tasks, setTask] = useState<Task[]>([])
 
-    if (localStorageTasks) {
-      const tasksParsed = JSON.parse(localStorageTasks)
-      return tasksParsed
+  //  TODO: Isolate the api requests in its own file
+  const fetchTasks = async (
+    controller: AbortController,
+    isMounted: Boolean,
+  ) => {
+    try {
+      const response = await apiPrivate.get('/tasks/user', {
+        signal: controller.signal,
+      })
+
+      console.log(response.data)
+      isMounted && setTask(response.data.userTasks)
+    } catch (err: any) {
+      console.log(
+        `error in the fetchTasks: ${JSON.stringify(err.response.data)}`,
+      )
+      // navigate('/', { state: { from: location }, replace: true })
     }
-    return []
-  })
+  }
 
-  //  TODO: setTasks
-  useEffect(() => {
-    let isMounted = true
-    const controller = new AbortController()
-
-    const getTasks = async () => {
-      try {
-        const response = await apiPrivate.get('/tasks/user', {
-          signal: controller.signal,
-          withCredentials: true,
-        })
-
-        console.log(response.data)
-        // isMounted && setTask(response.data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-    getTasks()
-
-    return () => {
-      isMounted = false
-      controller.abort()
-    }
-  }, [apiPrivate])
+  //  TODO: Hit the endpoint to update the DB
+  // const createTask = async (controller: AbortController, data: Task) => {}
+  // const removeTask = async (controller: AbortController, id: string) => {}
+  // const checkTask = async (controller: AbortController, id: string) => {}
 
   function handleSetTaskTitleInTimer(taskTitle: string) {
     setTaskTitle(taskTitle)
@@ -120,11 +110,6 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     return tasksDone
   }
 
-  useEffect(() => {
-    const taskJSON = JSON.stringify(tasks)
-    localStorage.setItem('@focus:tasks/v1.0.0', taskJSON)
-  }, [tasks])
-
   return (
     <TaskContext.Provider
       value={{
@@ -135,6 +120,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         handleDeleteTask,
         countDoneTasks,
         handleSetTaskTitleInTimer,
+        fetchTasks,
       }}
     >
       {children}

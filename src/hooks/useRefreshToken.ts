@@ -10,19 +10,19 @@ export const useRefreshToken = () => {
         withCredentials: true,
       })
 
-      console.log(response.data.token)
+      console.log('token from the endpoint: ', response.data.token)
       updateAuthToken(response.data.token)
       return response.data.token
     } catch (err: any) {
       switch (err.response.status) {
         case 401:
-          console.log(`${err.response.data.message}`)
+          console.log(`refreshHook error(401): ${err.response.data.message}`)
           break
         case 403:
-          console.log(`${err.response.data.message}`)
+          console.log(`refreshHook error(403): ${err.response.data.message}`)
           break
         default:
-          console.log(`${err.response.data.message}`)
+          console.log(`refreshHook error: ${err.response.data.message}`)
       }
     }
   }

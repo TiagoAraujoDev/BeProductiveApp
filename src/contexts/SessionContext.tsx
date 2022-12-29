@@ -18,15 +18,14 @@ interface User {
   name: string
   username: string
   email: string
-  password?: string
   avatar?: string
   created_at?: string
 }
 
 interface Auth {
   token: string
-  user: {
-    name: string
+  user?: {
+    id: string
     email: string
   }
 }
@@ -36,7 +35,7 @@ interface SessionContextProviderProps {
 }
 
 interface SessionContextType {
-  auth: Auth | undefined
+  auth: Auth
   errorMessage: string
   statusOk: boolean
   registerNewUser: (data: NewUserFormData) => Promise<void>
@@ -49,7 +48,7 @@ export const SessionContext = createContext({} as SessionContextType)
 export function SessionContextProvider({
   children,
 }: SessionContextProviderProps) {
-  const [auth, setAuth] = useState<Auth>()
+  const [auth, setAuth] = useState<Auth>({} as Auth)
   const [user, setUser] = useState<User>()
   const [statusOk, setStatusOk] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
@@ -65,7 +64,7 @@ export function SessionContextProvider({
 
       const responseData: User = await response.data
 
-      const { avatar, password, created_at: createdAt, ...user } = responseData
+      const { avatar, created_at: createdAt, ...user } = responseData
 
       setUser(user)
       setStatusOk(true)
@@ -104,14 +103,17 @@ export function SessionContextProvider({
 
   const updateAuthToken = (token: string): void => {
     setAuth((state) => {
-      console.log(auth)
-      console.log(token)
+      console.log('authState: ', auth)
+      console.log('token from refreshHook: ', token)
 
       if (state) {
         return {
           ...state,
           token,
         }
+      }
+      return {
+        token,
       }
     })
   }

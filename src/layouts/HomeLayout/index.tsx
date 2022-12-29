@@ -4,7 +4,7 @@ import { HeroSection } from '../../components/HeroSection'
 
 import { HomeContainer } from './styles'
 
-export function HomeLayout() {
+export const HomeLayout = () => {
   return (
     <HomeContainer>
       <HeroSection />
