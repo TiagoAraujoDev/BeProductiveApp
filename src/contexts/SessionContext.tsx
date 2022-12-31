@@ -53,6 +53,8 @@ export function SessionContextProvider({
   const [statusOk, setStatusOk] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
+  const navigate = useNavigate()
+
   const registerNewUser = async (data: NewUserFormData) => {
     try {
       const response = await api.post('/users', data, {
@@ -90,6 +92,7 @@ export function SessionContextProvider({
 
       const responseData: Auth = await response.data
       setAuth(responseData)
+      navigate('/')
     } catch (err: any) {
       switch (err.response.status) {
         case 400:

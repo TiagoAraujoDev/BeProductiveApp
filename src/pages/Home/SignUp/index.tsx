@@ -41,7 +41,7 @@ export function SignUp() {
     handleSubmit,
   } = newUserForm
 
-  const handleSignIn = async (data: RegisterNewUserFormData) => {
+  const handleSignUp = async (data: RegisterNewUserFormData) => {
     await registerNewUser(data)
     reset()
     if (statusOk) navigate('/')
@@ -50,7 +50,7 @@ export function SignUp() {
   return (
     <FormContainer>
       <h2>Create an account</h2>
-      <Form onSubmit={handleSubmit(handleSignIn)}>
+      <Form onSubmit={handleSubmit(handleSignUp)}>
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" placeholder="Name" {...register('name')} />
         {errors.name && <ErrorContainer>{errors.name?.message}</ErrorContainer>}

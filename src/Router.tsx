@@ -13,22 +13,25 @@ import { AuthRoute } from './components/AuthRoute'
 export const Router = () => {
   return (
     <Routes>
-      <Route element={<PersistSession />}>
-        <Route path="/" element={<DefaultLayout />}>
-          <Route element={<AuthRoute />}>
-            <Route path="/" element={<Timer />} />
-          </Route>
-          <Route element={<AuthRoute />}>
-            <Route path="/history" element={<History />} />
-          </Route>
-          <Route element={<AuthRoute />}>
-            <Route path="/todo" element={<ToDo />} />
+      <Route path="/">
+        <Route element={<PersistSession />}>
+          <Route element={<DefaultLayout />}>
+            <Route element={<AuthRoute />}>
+              <Route path="/" element={<Timer />} />
+            </Route>
+            <Route element={<AuthRoute />}>
+              <Route path="/history" element={<History />} />
+            </Route>
+            <Route element={<AuthRoute />}>
+              <Route path="/todo" element={<ToDo />} />
+            </Route>
           </Route>
         </Route>
-      </Route>
-      <Route path="/" element={<HomeLayout />}>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+
+        <Route element={<HomeLayout />}>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Route>
       </Route>
     </Routes>
   )

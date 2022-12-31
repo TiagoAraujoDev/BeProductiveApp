@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
 
 export interface Task {
@@ -33,7 +33,6 @@ export const TaskContext = createContext({} as TaskContextType)
 
 export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const navigate = useNavigate()
-  const location = useLocation()
   const apiPrivate = useApiPrivate()
 
   const [taskTitle, setTaskTitle] = useState('')
@@ -54,8 +53,9 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     } catch (err: any) {
       console.log(
         `error in the fetchTasks: ${JSON.stringify(err.response.data)}`,
+        //  TODO: Receive the location from the args in the ToDo component
+        // navigate('/signin'),
       )
-      // navigate('/', { state: { from: location }, replace: true })
     }
   }
 
