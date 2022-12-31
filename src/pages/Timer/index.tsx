@@ -43,8 +43,8 @@ export const Timer = () => {
     reset()
   }
 
-  const task = watch('task')
-  const isSubmitDisabled = !task
+  const minutesAmount = watch('minutesAmount')
+  const isSubmitDisabled = !minutesAmount
 
   return (
     <HomeContainer>
