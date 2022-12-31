@@ -77,7 +77,7 @@ export const CycleContextProvider = ({
     localStorage.setItem('@focus:cycle-state/v1.0.0', cycleStateJSON)
   }, [cyclesState])
 
-  function createNewCycle(data: CycleFormData) {
+  const createNewCycle = (data: CycleFormData) => {
     const id = String(new Date().getTime())
 
     const newCycle: Cycle = {
@@ -92,15 +92,15 @@ export const CycleContextProvider = ({
     setAmountSecondsPassed(0)
   }
 
-  function interruptCurrentCycle() {
+  const interruptCurrentCycle = () => {
     dispatch(interruptCurrentCycleAction())
   }
 
-  function setSecondsPassed(seconds: number) {
+  const setSecondsPassed = (seconds: number) => {
     setAmountSecondsPassed(seconds)
   }
 
-  function setCurrentCycleAsFinished() {
+  const setCurrentCycleAsFinished = () => {
     dispatch(markCurrentCycleAsFinishedAction())
   }
 

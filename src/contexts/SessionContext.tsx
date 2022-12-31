@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { api } from '../config/api/axios'
 
 interface NewUserFormData {
@@ -45,9 +46,9 @@ interface SessionContextType {
 
 export const SessionContext = createContext({} as SessionContextType)
 
-export function SessionContextProvider({
+export const SessionContextProvider = ({
   children,
-}: SessionContextProviderProps) {
+}: SessionContextProviderProps) => {
   const [auth, setAuth] = useState<Auth>({} as Auth)
   const [user, setUser] = useState<User>()
   const [statusOk, setStatusOk] = useState<boolean>(false)

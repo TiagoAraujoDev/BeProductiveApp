@@ -10,7 +10,6 @@ export const useRefreshToken = () => {
         withCredentials: true,
       })
 
-      console.log('token from the endpoint: ', response.data.token)
       updateAuthToken(response.data.token)
       return response.data.token
     } catch (err: any) {

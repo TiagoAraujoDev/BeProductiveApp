@@ -42,7 +42,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const fetchTasks = async (
     controller: AbortController,
     isMounted: Boolean,
-  ) => {
+  ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/tasks/user', {
         signal: controller.signal,
@@ -64,12 +64,12 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   // const removeTask = async (controller: AbortController, id: string) => {}
   // const checkTask = async (controller: AbortController, id: string) => {}
 
-  function handleSetTaskTitleInTimer(taskTitle: string) {
+  const handleSetTaskTitleInTimer = (taskTitle: string): void => {
     setTaskTitle(taskTitle)
     navigate('/')
   }
 
-  function handleCreateTask(data: taskFormData) {
+  const handleCreateTask = (data: taskFormData): void => {
     const id = new Date().getTime().toString()
 
     const newTask = {
@@ -83,7 +83,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     setTask([...tasks, newTask])
   }
 
-  function handleToggleTaskDone(id: string): void {
+  const handleToggleTaskDone = (id: string): void => {
     setTask(
       tasks.map((task) => {
         if (task.id === id) {
@@ -95,11 +95,11 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     )
   }
 
-  function handleDeleteTask(id: string): void {
+  const handleDeleteTask = (id: string): void => {
     setTask(tasks.filter((task) => task.id !== id))
   }
 
-  function countDoneTasks(): number {
+  const countDoneTasks = (): number => {
     const tasksDone = tasks.reduce((acc, task) => {
       if (task.done) {
         return acc + 1
