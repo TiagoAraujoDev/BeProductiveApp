@@ -6,7 +6,7 @@ import { TaskContext } from '../../../../contexts/TasksContext'
 
 import { FormContainer, MinutesAmountInput, TaskInput } from './styles'
 
-export function NewCycleForm() {
+export const NewCycleForm = () => {
   const { activeCycle } = useContext(CycleContext)
   const { taskTitle } = useContext(TaskContext)
 

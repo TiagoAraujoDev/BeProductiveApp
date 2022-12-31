@@ -35,10 +35,9 @@ export const ToDo = () => {
       taskContent: '',
     },
   })
-
   const { handleSubmit, reset } = newTaskForm
 
-  function createTask(data: NewTaskFormData): void {
+  const createTask = (data: NewTaskFormData): void => {
     handleCreateTask(data)
     reset()
   }
