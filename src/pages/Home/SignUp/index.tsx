@@ -44,7 +44,7 @@ export function SignUp() {
   const handleSignUp = async (data: RegisterNewUserFormData) => {
     await registerNewUser(data)
     reset()
-    if (statusOk) navigate('/')
+    if (statusOk) navigate('/signin')
   }
 
   return (
@@ -90,7 +90,7 @@ export function SignUp() {
         </button>
       </Form>
       <span>Already has an account?</span>
-      <NavLink to={'/'}>Sign in</NavLink>
+      <NavLink to={'/signin'}>Sign in</NavLink>
     </FormContainer>
   )
 }
