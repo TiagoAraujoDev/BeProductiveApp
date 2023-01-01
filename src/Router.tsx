@@ -7,8 +7,8 @@ import { SignUp } from './pages/Home/SignUp'
 import { SignIn } from './pages/Home/SignIn'
 import { Timer } from './pages/Timer'
 import { ToDo } from './pages/ToDo'
-import { PersistSession } from './components/PersistSession'
-import { AuthRoute } from './components/AuthRoute'
+import { PersistSession } from './components/Session/PersistSession'
+import { AuthRoute } from './components/Session/AuthRoute'
 
 export const Router = () => {
   return (
