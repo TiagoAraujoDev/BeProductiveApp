@@ -9,9 +9,11 @@ export const useApiPrivate = () => {
   const { auth } = useAuth()
 
   useEffect(() => {
+    console.log('interceptors', auth)
     const requestIntercept = apiPrivate.interceptors.request.use(
       (config) => {
         if (!config?.headers?.Authorization) {
+          console.log('interceptors>if', auth)
           config.headers!.Authorization = `Bearer ${auth?.token}`
         }
         return config
@@ -24,6 +26,7 @@ export const useApiPrivate = () => {
 
     const responseIntercept = apiPrivate.interceptors.response.use(
       (response) => {
+        console.log(response)
         return response
       },
       async (error) => {
