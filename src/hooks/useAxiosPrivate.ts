@@ -12,11 +12,12 @@ export const useApiPrivate = () => {
     console.log('interceptors', auth)
     const requestIntercept = apiPrivate.interceptors.request.use(
       (config) => {
-        console.log(config)
+        console.log('config', config)
         if (!config?.headers?.Authorization) {
           console.log('interceptors>if', auth)
           config.headers!.Authorization = `Bearer ${auth?.token}`
         }
+        console.log('config', config)
         return config
       },
       (error) => {
@@ -27,10 +28,12 @@ export const useApiPrivate = () => {
 
     const responseIntercept = apiPrivate.interceptors.response.use(
       (response) => {
-        console.log(response)
+        console.log('response', response)
         return response
       },
       async (error) => {
+        console.log('error response', error)
+
         const prevRequest = error?.config
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true
