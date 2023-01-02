@@ -10,19 +10,19 @@ export interface Task {
   createdAt: Date
 }
 
-interface taskFormData {
-  taskContent: string
+interface TaskFormData {
+  title: string
 }
 
 interface TaskContextType {
   tasks: Task[]
   taskTitle: string
-  handleCreateTask: (data: taskFormData) => void
-  handleToggleTaskDone: (id: string) => void
-  handleDeleteTask: (id: string) => void
-  countDoneTasks: () => number
-  handleSetTaskTitleInTimer: (title: string) => void
   fetchTasks: (controller: AbortController, isMounted: boolean) => void
+  createTask: (data: TaskFormData) => Promise<void>
+  toggleTaskDoneStatus: (id: string) => Promise<void>
+  deleteTask: (id: string) => Promise<void>
+  countDoneTasks: () => number
+  setTaskTitleInTimer: (title: string) => void
 }
 
 interface TaskContextProviderProps {
@@ -48,42 +48,67 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         signal: controller.signal,
       })
 
-      console.log(response.data)
       isMounted && setTask(response.data.userTasks)
     } catch (err: any) {
-      console.log(
-        `error in the fetchTasks: ${JSON.stringify(err.response.data)}`,
-        //  TODO: Receive the location from the args in the ToDo component
-        // navigate('/signin'),
-      )
+      console.log(err.message)
+
+      // Redrection to login if refresh token expires
+      if (err.message !== 'canceled') {
+        navigate('/signin')
+      }
     }
   }
 
-  //  TODO: Hit the endpoint to update the DB
-  // const createTask = async (controller: AbortController, data: Task) => {}
-  // const removeTask = async (controller: AbortController, id: string) => {}
-  // const checkTask = async (controller: AbortController, id: string) => {}
+  const createTask = async (data: TaskFormData): Promise<void> => {
+    try {
+      const response = await apiPrivate.post('/tasks', { title: data.title })
 
-  const handleSetTaskTitleInTimer = (taskTitle: string): void => {
+      const newTask = response.data
+
+      setTask((state) => {
+        return [...state, newTask]
+      })
+    } catch (err) {
+      navigate('/signin')
+    }
+  }
+  const deleteTask = async (id: string): Promise<void> => {
+    try {
+      await apiPrivate.delete('/tasks', {
+        headers: {
+          id: `${id}`,
+        },
+      })
+      deleteTaskFromState(id)
+    } catch (err) {
+      navigate('/signin')
+    }
+  }
+
+  const toggleTaskDoneStatus = async (id: string): Promise<void> => {
+    console.log('tctx: ', typeof id)
+    try {
+      toggleTaskDoneStatusFromState(id)
+      await apiPrivate.put(
+        '/tasks',
+        {},
+        {
+          headers: {
+            id: `${id}`,
+          },
+        },
+      )
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const setTaskTitleInTimer = (taskTitle: string): void => {
     setTaskTitle(taskTitle)
     navigate('/')
   }
 
-  const handleCreateTask = (data: taskFormData): void => {
-    const id = new Date().getTime().toString()
-
-    const newTask = {
-      id,
-      title: data.taskContent,
-      done: false,
-      updatedAt: null,
-      createdAt: new Date(),
-    }
-
-    setTask([...tasks, newTask])
-  }
-
-  const handleToggleTaskDone = (id: string): void => {
+  const toggleTaskDoneStatusFromState = (id: string): void => {
     setTask(
       tasks.map((task) => {
         if (task.id === id) {
@@ -95,7 +120,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     )
   }
 
-  const handleDeleteTask = (id: string): void => {
+  const deleteTaskFromState = (id: string): void => {
     setTask(tasks.filter((task) => task.id !== id))
   }
 
@@ -115,12 +140,12 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
       value={{
         tasks,
         taskTitle,
-        handleCreateTask,
-        handleToggleTaskDone,
-        handleDeleteTask,
-        countDoneTasks,
-        handleSetTaskTitleInTimer,
         fetchTasks,
+        createTask,
+        toggleTaskDoneStatus,
+        deleteTask,
+        countDoneTasks,
+        setTaskTitleInTimer,
       }}
     >
       {children}

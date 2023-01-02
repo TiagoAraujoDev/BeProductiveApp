@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
@@ -20,25 +20,34 @@ import {
 import todoLogo from '../../assets/todoLogo.svg'
 
 const createTaskFormValidationSchema = zod.object({
-  taskContent: zod.string().min(1, 'Enter a task!'),
+  title: zod.string().min(1, 'Enter a task!'),
 })
 
 type NewTaskFormData = zod.infer<typeof createTaskFormValidationSchema>
 
 export const ToDo = () => {
-  const { tasks, handleCreateTask, countDoneTasks, fetchTasks } =
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const { tasks, createTask, countDoneTasks, fetchTasks } =
     useContext(TaskContext)
 
   const newTaskForm = useForm<NewTaskFormData>({
     resolver: zodResolver(createTaskFormValidationSchema),
     defaultValues: {
-      taskContent: '',
+      title: '',
     },
   })
   const { handleSubmit, reset } = newTaskForm
 
-  const createTask = (data: NewTaskFormData): void => {
-    handleCreateTask(data)
+  const handleCreateTask = async (data: NewTaskFormData): Promise<void> => {
+    try {
+      setIsLoading(true)
+      await createTask(data)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
     reset()
   }
 
@@ -54,12 +63,13 @@ export const ToDo = () => {
       isMounted = false
       controller.abort()
     }
-  })
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <TaskContainer>
       <img src={todoLogo} alt="" />
-      <form onSubmit={handleSubmit(createTask)} action="">
+      <form onSubmit={handleSubmit(handleCreateTask)}>
         <FormProvider {...newTaskForm}>
           <NewTaskForm />
         </FormProvider>
@@ -78,7 +88,9 @@ export const ToDo = () => {
           </InfoContainer>
         </SummaryContainer>
         <TaskCardsBox>
-          {tasks.length > 0 ? (
+          {isLoading ? (
+            <p>loading...</p>
+          ) : tasks.length > 0 ? (
             tasks.map((task) => <TaskCard key={task.id} task={task} />)
           ) : (
             <EmptyTask />

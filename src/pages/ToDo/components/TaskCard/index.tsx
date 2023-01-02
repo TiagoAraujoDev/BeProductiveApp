@@ -17,19 +17,32 @@ interface TaskCardProps {
 }
 
 export function TaskCard({ task }: TaskCardProps) {
-  const { handleToggleTaskDone, handleDeleteTask, handleSetTaskTitleInTimer } =
+  const { toggleTaskDoneStatus, deleteTask, setTaskTitleInTimer } =
     useContext(TaskContext)
 
   const isTaskDone = task.done
 
+  const handleDeleteTask = (id: string): void => {
+    deleteTask(id)
+  }
+
+  const handleToggleTaskDoneStatus = (id: string): void => {
+    console.log('tc: ', id)
+    toggleTaskDoneStatus(id)
+  }
+
+  const handleSetTaskTitleInTimer = (title: string): void => {
+    setTaskTitleInTimer(title)
+  }
+
   return (
     <TaskCardContainer>
       {isTaskDone ? (
-        <CheckButton onClick={() => handleToggleTaskDone(task.id)}>
+        <CheckButton onClick={() => handleToggleTaskDoneStatus(task.id)}>
           <CheckCircle size={24} weight="fill" color="#00875F" />
         </CheckButton>
       ) : (
-        <CheckButton onClick={() => handleToggleTaskDone(task.id)}>
+        <CheckButton onClick={() => handleToggleTaskDoneStatus(task.id)}>
           <Circle size={24} color="#555" />
         </CheckButton>
       )}
