@@ -51,12 +51,14 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
 
       isMounted && setTask(response.data.userTasks)
     } catch (err: any) {
-      console.log(err.response.data)
-      console.log(err.response.status)
-      console.log(err.response.headers)
-      // Redirection to login if refresh token expires
-      if (err.response.status === 403) {
-        navigate('/signin')
+      if (err) {
+        console.log(err?.response?.data)
+        console.log(err?.response?.status)
+        console.log(err?.response?.headers)
+        // Redirection to login if refresh token expires
+        if (err?.response?.status === 403) {
+          navigate('/signin')
+        }
       }
     }
   }
