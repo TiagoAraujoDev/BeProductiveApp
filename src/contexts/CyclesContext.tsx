@@ -36,7 +36,9 @@ interface CycleContextProviderProps {
 
 export const CycleContext = createContext({} as CycleContextType)
 
-export function CycleContextProvider({ children }: CycleContextProviderProps) {
+export const CycleContextProvider = ({
+  children,
+}: CycleContextProviderProps) => {
   const [cyclesState, dispatch] = useReducer(
     cyclesReducer,
     {
@@ -75,7 +77,7 @@ export function CycleContextProvider({ children }: CycleContextProviderProps) {
     localStorage.setItem('@focus:cycle-state/v1.0.0', cycleStateJSON)
   }, [cyclesState])
 
-  function createNewCycle(data: CycleFormData) {
+  const createNewCycle = (data: CycleFormData) => {
     const id = String(new Date().getTime())
 
     const newCycle: Cycle = {
@@ -90,15 +92,15 @@ export function CycleContextProvider({ children }: CycleContextProviderProps) {
     setAmountSecondsPassed(0)
   }
 
-  function interruptCurrentCycle() {
+  const interruptCurrentCycle = () => {
     dispatch(interruptCurrentCycleAction())
   }
 
-  function setSecondsPassed(seconds: number) {
+  const setSecondsPassed = (seconds: number) => {
     setAmountSecondsPassed(seconds)
   }
 
-  function setCurrentCycleAsFinished() {
+  const setCurrentCycleAsFinished = () => {
     dispatch(markCurrentCycleAsFinishedAction())
   }
 

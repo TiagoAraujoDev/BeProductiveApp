@@ -5,7 +5,7 @@ import { CycleContext } from '../../../../contexts/CyclesContext'
 
 import { CountdownContainer, Separator } from './styles'
 
-export function Countdown() {
+export const Countdown = () => {
   const {
     activeCycle,
     activeCycleId,

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
@@ -7,6 +7,7 @@ import { TaskContext } from '../../contexts/TasksContext'
 import { EmptyTask } from './components/EmptyTask'
 import { NewTaskForm } from './components/NewTaskForm'
 import { TaskCard } from './components/TaskCard'
+import { Loading } from '../../components/Loading'
 
 import {
   InfoContainer,
@@ -20,34 +21,56 @@ import {
 import todoLogo from '../../assets/todoLogo.svg'
 
 const createTaskFormValidationSchema = zod.object({
-  taskContent: zod.string().min(1, 'Enter a task!'),
+  title: zod.string().min(1, 'Enter a task!'),
 })
 
 type NewTaskFormData = zod.infer<typeof createTaskFormValidationSchema>
 
-export function ToDo() {
-  const { tasks, handleCreateTask, countDoneTasks } = useContext(TaskContext)
+export const ToDo = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const { tasks, createTask, countDoneTasks, fetchTasks } =
+    useContext(TaskContext)
 
   const newTaskForm = useForm<NewTaskFormData>({
     resolver: zodResolver(createTaskFormValidationSchema),
     defaultValues: {
-      taskContent: '',
+      title: '',
     },
   })
-
   const { handleSubmit, reset } = newTaskForm
 
-  function createTask(data: NewTaskFormData): void {
-    handleCreateTask(data)
+  const handleCreateTask = async (data: NewTaskFormData): Promise<void> => {
+    try {
+      setIsLoading(true)
+      await createTask(data)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
     reset()
   }
 
   const totalTasksCount = tasks.length
 
+  useEffect(() => {
+    let isMounted = true
+    const controller = new AbortController()
+
+    fetchTasks(controller, isMounted)
+
+    return () => {
+      isMounted = false
+      controller.abort()
+    }
+    // eslint-disable-next-line
+  }, [])
+
   return (
     <TaskContainer>
       <img src={todoLogo} alt="" />
-      <form onSubmit={handleSubmit(createTask)} action="">
+      <form onSubmit={handleSubmit(handleCreateTask)}>
         <FormProvider {...newTaskForm}>
           <NewTaskForm />
         </FormProvider>
@@ -66,7 +89,9 @@ export function ToDo() {
           </InfoContainer>
         </SummaryContainer>
         <TaskCardsBox>
-          {tasks.length > 0 ? (
+          {isLoading ? (
+            <Loading height="10rem" />
+          ) : tasks.length > 0 ? (
             tasks.map((task) => <TaskCard key={task.id} task={task} />)
           ) : (
             <EmptyTask />

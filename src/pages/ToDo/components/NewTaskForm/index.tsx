@@ -13,7 +13,7 @@ export function NewTaskForm() {
         type="text"
         placeholder="Add your task..."
         autoComplete="off"
-        {...register('taskContent')}
+        {...register('title')}
       />
       <ButtonTask>
         <PlusCircle size={24} />

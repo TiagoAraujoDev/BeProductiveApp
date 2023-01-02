@@ -13,7 +13,7 @@ import { ThemeToggleContext } from '../../contexts/ThemeContext'
 
 import { HeaderContainer, LogoContainer, ThemeButton } from './styles'
 
-export function Header() {
+export const Header = () => {
   const { changeTheme, themeName } = useContext(ThemeToggleContext)
 
   const handleChangeTheme = () => {
