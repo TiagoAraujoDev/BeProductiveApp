@@ -55,15 +55,16 @@ export const ToDo = () => {
   const totalTasksCount = tasks.length
 
   useEffect(() => {
-    let isMounted = true
-    const controller = new AbortController()
+    // let isMounted = true
+    // const controller = new AbortController()
 
-    fetchTasks(controller, isMounted)
+    // fetchTasks(controller, isMounted)
+    fetchTasks()
 
-    return () => {
-      isMounted = false
-      controller.abort()
-    }
+    // return () => {
+    //   isMounted = false
+    //   controller.abort()
+    // }
     // eslint-disable-next-line
   }, [])
 
