@@ -12,6 +12,7 @@ export const useApiPrivate = () => {
     console.log('interceptors', auth)
     const requestIntercept = apiPrivate.interceptors.request.use(
       (config) => {
+        console.log(config)
         if (!config?.headers?.Authorization) {
           console.log('interceptors>if', auth)
           config.headers!.Authorization = `Bearer ${auth?.token}`
