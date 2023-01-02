@@ -18,7 +18,7 @@ interface TaskFormData {
 interface TaskContextType {
   tasks: Task[]
   taskTitle: string
-  fetchTasks: () => void
+  fetchTasks: (controller: AbortController, isMounted: boolean) => void
   createTask: (data: TaskFormData) => Promise<void>
   toggleTaskDoneStatus: (id: string) => Promise<void>
   deleteTask: (id: string) => Promise<void>
@@ -40,13 +40,16 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const [tasks, setTask] = useState<Task[]>([])
 
   //  TODO: Isolate the api requests in its own file
-  const fetchTasks = async (): // controller: AbortController,
-  // isMounted: Boolean,
-  Promise<void> => {
+  const fetchTasks = async (
+    controller: AbortController,
+    isMounted: Boolean,
+  ): Promise<void> => {
     try {
-      const response = await apiPrivate.get('/tasks/user')
+      const response = await apiPrivate.get('/tasks/user', {
+        signal: controller.signal,
+      })
 
-      setTask(response.data.userTasks)
+      isMounted && setTask(response.data.userTasks)
     } catch (err: any) {
       console.log(err.response.data)
       console.log(err.response.status)
