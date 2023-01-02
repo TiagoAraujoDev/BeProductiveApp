@@ -7,6 +7,7 @@ import { TaskContext } from '../../contexts/TasksContext'
 import { EmptyTask } from './components/EmptyTask'
 import { NewTaskForm } from './components/NewTaskForm'
 import { TaskCard } from './components/TaskCard'
+import { Loading } from '../../components/Loading'
 
 import {
   InfoContainer,
@@ -89,7 +90,7 @@ export const ToDo = () => {
         </SummaryContainer>
         <TaskCardsBox>
           {isLoading ? (
-            <p>loading...</p>
+            <Loading height="10rem" />
           ) : tasks.length > 0 ? (
             tasks.map((task) => <TaskCard key={task.id} task={task} />)
           ) : (

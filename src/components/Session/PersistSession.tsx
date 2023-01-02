@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
+
+import { Loading } from '../Loading'
+
 import { useAuth } from '../../hooks/useAuth'
 import { useRefreshToken } from '../../hooks/useRefreshToken'
 
@@ -23,5 +26,5 @@ export const PersistSession = () => {
     !auth?.token ? verifyToken() : setIsLoading(false)
   }, [auth, refresh])
 
-  return <>{isLoading ? <p>is loading...</p> : <Outlet />}</>
+  return <>{isLoading ? <Loading height="100%" /> : <Outlet />}</>
 }
