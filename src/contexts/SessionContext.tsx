@@ -92,6 +92,7 @@ export const SessionContextProvider = ({
       })
 
       const responseData: Auth = await response.data
+      console.log(responseData)
       setAuth(responseData)
       navigate('/')
     } catch (err: any) {
@@ -106,6 +107,8 @@ export const SessionContextProvider = ({
   }
 
   const updateAuthToken = (token: string): void => {
+    console.log(auth)
+    console.log(token)
     setAuth((state) => {
       if (state) {
         return {
