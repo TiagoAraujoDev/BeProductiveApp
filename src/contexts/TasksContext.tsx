@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
 
 export interface Task {
@@ -52,7 +53,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     } catch (err: any) {
       console.log(err.message)
 
-      // Redrection to login if refresh token expires
+      // Redirection to login if refresh token expires
       if (err.message !== 'canceled') {
         navigate('/signin')
       }
@@ -74,12 +75,12 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   }
   const deleteTask = async (id: string): Promise<void> => {
     try {
+      deleteTaskFromState(id)
       await apiPrivate.delete('/tasks', {
         headers: {
           id: `${id}`,
         },
       })
-      deleteTaskFromState(id)
     } catch (err) {
       navigate('/signin')
     }
