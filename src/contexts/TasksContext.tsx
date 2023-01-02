@@ -51,10 +51,10 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
 
       isMounted && setTask(response.data.userTasks)
     } catch (err: any) {
-      console.log(err.message)
+      console.log(err.response.status)
 
       // Redirection to login if refresh token expires
-      if (err.message !== 'canceled') {
+      if (err.response.status !== 401) {
         navigate('/signin')
       }
     }
