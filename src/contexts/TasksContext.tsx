@@ -46,6 +46,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/tasks/user', {
+        headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,
       })
 
