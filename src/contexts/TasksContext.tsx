@@ -62,8 +62,6 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
     } catch (err: any) {
       if (err) {
         console.log(err?.response?.data)
-        console.log(err?.response?.status)
-        console.log(err?.response?.headers)
         // Redirection to login if refresh token expires
         if (err?.response?.status === 403) {
           navigate('/signin')
@@ -99,7 +97,6 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   }
 
   const toggleTaskDoneStatus = async (id: string): Promise<void> => {
-    console.log('tctx: ', typeof id)
     try {
       toggleTaskDoneStatusFromState(id)
       await apiPrivate.put(

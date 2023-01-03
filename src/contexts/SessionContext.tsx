@@ -107,8 +107,6 @@ export const SessionContextProvider = ({
   }
 
   const updateAuthToken = (token: string): void => {
-    console.log(auth)
-    console.log(token)
     setAuth((state) => {
       if (state) {
         return {

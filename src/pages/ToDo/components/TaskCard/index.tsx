@@ -27,7 +27,6 @@ export function TaskCard({ task }: TaskCardProps) {
   }
 
   const handleToggleTaskDoneStatus = (id: string): void => {
-    console.log('tc: ', id)
     toggleTaskDoneStatus(id)
   }
 
