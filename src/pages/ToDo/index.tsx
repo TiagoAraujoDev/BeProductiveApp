@@ -19,6 +19,7 @@ import {
 } from './styles'
 
 import todoLogo from '../../assets/todoLogo.svg'
+import { useAuth } from '../../hooks/useAuth'
 
 const createTaskFormValidationSchema = zod.object({
   title: zod.string().min(1, 'Enter a task!'),
@@ -28,6 +29,7 @@ type NewTaskFormData = zod.infer<typeof createTaskFormValidationSchema>
 
 export const ToDo = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { auth } = useAuth()
 
   const { tasks, createTask, countDoneTasks, fetchTasks } =
     useContext(TaskContext)
@@ -58,7 +60,7 @@ export const ToDo = () => {
     let isMounted = true
     const controller = new AbortController()
 
-    fetchTasks(controller, isMounted)
+    fetchTasks(controller, isMounted, auth)
 
     return () => {
       isMounted = false
