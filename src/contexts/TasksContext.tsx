@@ -53,7 +53,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
       const response = await apiPrivate.get('/tasks/user', {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${auth}`,
+          Authorization: `Bearer ${auth.token}`,
         },
         signal: controller.signal,
       })
