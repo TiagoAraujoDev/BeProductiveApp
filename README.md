@@ -1,5 +1,5 @@
 <h1 align="center">Focus</h1>
-<p align="center">An application to increase productivity and practice some fundamentals of ReactJS</p>
+<p align="center">An application to increase productivity and get the job done</p>
 
 <p align="center">
  <a href="#pre-requisitos">Prerequisites</a> •
@@ -19,15 +19,21 @@
 
 <img src="./public/project_screenshots/pic_4.png">
 
+<img src="./public/project_screenshots/pic_5.png">
+
+<img src="./public/project_screenshots/pic_6.png">
+
 <h3 id="pre-requisitos">Prerequisites</h3>
 
 Before starting, you will need to have the following tools installed on your machine:
-[Git](https://git-scm.com).
+[Git](https://git-scm.com) and [Node](https://nodejs.org/en/).
 Besides, it's good to have an editor to work with the code like [VSCode](https://code.visualstudio.com/)
+
+if you want to run the app in your machine, follow the steps above:
 
 - Clone the repository:
 
-<code>git clone https://github.com/TiagoAraujoDev/BeProductiveApp.git</code>
+<code>git clone https://github.com/TiagoAraujoDev/FocusApp.git</code>
 
 - Change to the repository folder, install the dependencies and run the script to run the application locally:
 
@@ -37,11 +43,14 @@ Besides, it's good to have an editor to work with the code like [VSCode](https:/
 
 <code>npm run dev</code>
 
+- This application is connected with Focus_API. Go to https://github.com/TiagoAraujoDev/API_Focus and follow the instructions there to run the API locally or make the adjustments to work with your own API.
+
 <h3 id="objetivo">🎯 Goals</h3>
 
-- In this project I was practicing ReactJS building a modern and useful application.
-- To follow the market needs I was using Typescript in this app and others before this one, because the typing is a good feature to development.
-- The most important technologies used in this app were vite to create a good development environment and some important libraries such as react-hook-form to manage forms, zod to help with form validation and typing integration, immer to work with immutability in an easy way, styled-components to give styles to the app and react-router-dom to create routes.
+- In this project I wanted to create a productivity app the help me to organize my to-dos and get focus.
+- To build this application I used Reactjs to create a SPA(single page application) and all the authentication and data persistence It's been manage by Focus_API.
+- All the authentication is made using JWT and with refresh-token strategy. When the user loggin the api sends a response with an access token and a refresh-token, but the refresh-token is sent in a httpOnly cookie. The access token is saved on the application memory and I made a custom hook that makes a request to the refresh-token endpoint to refresh the access token when the user closes and refresh the page. So that way the don't need to save the access token in localstorage or in database. When the refresh-token expires the application send the user to the loggin and the cycle restart.
+- The most important technologies used in this app were vite to create a good development environment and some important libraries such as react-hook-form to manage forms, zod to help with form validation and typing integration, the contextAPI to share to information and keep all the components more readable for refactor, changes and improvements, styled-components gives to the app styles and keep it scoped and react-router-dom to create routes and the strategy to persist the user session and verify if there's a session.
 - A clean code was my main goal here. No design patterns just a readable code.
  
 <h3 id="tecnologias">🛠 technologies</h3>
@@ -51,6 +60,7 @@ The following tools were used in building the project:
 - [Typescript](https://www.javascript.com/)
 - [ReactJS](https://www.reactjs.org/)
 - [Vite](https://vitejs.dev/)
+- [Focus_API](https://github.com/TiagoAraujoDev/API_Focus)
 
 <h3 id="autor">Author</h3>
 
