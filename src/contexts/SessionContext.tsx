@@ -50,7 +50,7 @@ export const SessionContextProvider = ({
   children,
 }: SessionContextProviderProps) => {
   const [auth, setAuth] = useState<Auth>({} as Auth)
-  const [user, setUser] = useState<User>()
+  const [_, setUser] = useState<User>()
   const [statusOk, setStatusOk] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
@@ -74,6 +74,9 @@ export const SessionContextProvider = ({
     } catch (err: any) {
       switch (err.response.status) {
         case 400:
+          setErrorMessage(err.response.data.message)
+          break
+        case 409:
           setErrorMessage(err.response.data.message)
           break
         default:

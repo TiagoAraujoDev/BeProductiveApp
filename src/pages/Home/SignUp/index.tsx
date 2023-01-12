@@ -36,10 +36,12 @@ export function SignUp() {
 
   const {
     register,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting, errors, isSubmitSuccessful },
     reset,
     handleSubmit,
   } = newUserForm
+
+  const submitDone = isSubmitSuccessful
 
   const handleSignUp = async (data: RegisterNewUserFormData) => {
     await registerNewUser(data)
@@ -84,7 +86,7 @@ export function SignUp() {
         {errors.password && (
           <ErrorContainer>{errors.password?.message}</ErrorContainer>
         )}
-        {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
+        {submitDone && <ErrorContainer>{errorMessage}</ErrorContainer>}
         <button type="submit" disabled={isSubmitting}>
           Sign up
         </button>
