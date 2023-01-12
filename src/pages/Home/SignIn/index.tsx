@@ -35,12 +35,14 @@ export function SignIn() {
     register,
     handleSubmit,
     setFocus,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting, errors, isSubmitSuccessful },
   } = signInUserFormData
 
   useEffect(() => {
     setFocus('email')
   }, [setFocus])
+
+  const submitDone = isSubmitSuccessful
 
   const handleSignInUser = async (data: SignUserFormData) => {
     await authUser(data)
@@ -66,7 +68,7 @@ export function SignIn() {
           {...register('password')}
         />
         {errors && <ErrorContainer>{errors.password?.message}</ErrorContainer>}
-        {errorMessage && <ErrorContainer>{errorMessage}</ErrorContainer>}
+        {submitDone && <ErrorContainer>{errorMessage}</ErrorContainer>}
         <button type="submit" disabled={isSubmitting}>
           Sign in
         </button>
