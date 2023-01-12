@@ -17,7 +17,6 @@ export const useApiPrivate = () => {
         return config
       },
       (error) => {
-        console.log('error => req')
         return Promise.reject(error)
       },
     )
