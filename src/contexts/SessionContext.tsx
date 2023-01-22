@@ -38,8 +38,7 @@ interface SessionContextProviderProps {
 interface SessionContextType {
   auth: Auth
   errorMessage: string
-  statusOk: boolean
-  registerNewUser: (data: NewUserFormData) => Promise<void>
+  registerNewUser: (data: NewUserFormData) => Promise<boolean | undefined>
   authUser: (data: any) => Promise<void>
   updateAuthToken: (token: string) => void
 }
@@ -51,7 +50,6 @@ export const SessionContextProvider = ({
 }: SessionContextProviderProps) => {
   const [auth, setAuth] = useState<Auth>({} as Auth)
   const [_, setUser] = useState<User>()
-  const [statusOk, setStatusOk] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
   const navigate = useNavigate()
@@ -66,12 +64,10 @@ export const SessionContextProvider = ({
       })
 
       const responseData: User = await response.data
-
       const { avatar, created_at: createdAt, ...user } = responseData
-
-      console.log("session provider", statusOk)
-      setStatusOk(true)
       setUser(user)
+
+      return true
     } catch (err: any) {
       switch (err.response.status) {
         case 400:
@@ -131,7 +127,6 @@ export const SessionContextProvider = ({
         authUser,
         auth,
         errorMessage,
-        statusOk,
         updateAuthToken,
       }}
     >

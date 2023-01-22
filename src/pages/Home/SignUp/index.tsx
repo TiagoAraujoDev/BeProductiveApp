@@ -21,7 +21,7 @@ type RegisterNewUserFormData = zod.infer<typeof registerNewUserFormSchema>
 
 export function SignUp() {
   const navigate = useNavigate()
-  const { registerNewUser, statusOk, errorMessage } = useAuth()
+  const { registerNewUser, errorMessage } = useAuth()
   const newUserForm = useForm<RegisterNewUserFormData>({
     resolver: zodResolver(registerNewUserFormSchema),
     mode: 'all',
@@ -43,13 +43,10 @@ export function SignUp() {
 
   const submitDone = isSubmitSuccessful
 
-  console.log("component render", statusOk)
-  if (statusOk) navigate('/signin')
-
   const handleSignUp = async (data: RegisterNewUserFormData) => {
-    await registerNewUser(data)
+    const status = await registerNewUser(data)
     reset()
-    console.log("function in component", statusOk)
+    if (status) navigate('/signin')
   }
 
   return (
