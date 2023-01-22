@@ -70,8 +70,8 @@ export const SessionContextProvider = ({
       const { avatar, created_at: createdAt, ...user } = responseData
 
       console.log("session provider", statusOk)
-      setUser(user)
       setStatusOk(true)
+      setUser(user)
     } catch (err: any) {
       switch (err.response.status) {
         case 400:
