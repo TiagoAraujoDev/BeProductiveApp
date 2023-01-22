@@ -91,9 +91,9 @@ export const SessionContextProvider = ({
         withCredentials: true,
       })
 
-      const responseData: Auth = await response.data
-      console.log(responseData)
+      const responseData = await response.data
       setAuth(responseData)
+
       navigate('/')
     } catch (err: any) {
       switch (err.response.status) {
