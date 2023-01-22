@@ -43,9 +43,11 @@ export function SignUp() {
 
   const submitDone = isSubmitSuccessful
 
+  console.log(statusOk)
   const handleSignUp = async (data: RegisterNewUserFormData) => {
     await registerNewUser(data)
     reset()
+    console.log(statusOk)
     if (statusOk) navigate('/signin')
   }
 
