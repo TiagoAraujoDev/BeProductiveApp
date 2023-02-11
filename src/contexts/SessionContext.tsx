@@ -64,7 +64,7 @@ export const SessionContextProvider = ({
       })
 
       const responseData: User = await response.data
-      const { avatar, created_at: createdAt, ...user } = responseData
+      const { created_at: createdAt, ...user } = responseData
       setUser(user)
 
       return true

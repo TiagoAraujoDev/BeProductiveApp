@@ -58,6 +58,11 @@ export function cyclesReducer(state: CycleState, action: Action) {
         draft.activeCycleId = null
       })
     }
+    case ActionTypes.INITIALIZE_STATE: {
+      return produce(state, (draft) => {
+        console.log(draft)
+      })
+    }
     default:
       return state
   }

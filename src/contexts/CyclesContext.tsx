@@ -2,15 +2,18 @@ import { differenceInSeconds } from 'date-fns'
 import {
   createContext,
   ReactNode,
+  useCallback,
   useEffect,
   useReducer,
   useState,
 } from 'react'
+import { useApiPrivate } from '../hooks/useAxiosPrivate'
 
 import {
   addNewCycleAction,
   interruptCurrentCycleAction,
   markCurrentCycleAsFinishedAction,
+  intializeState,
 } from '../reducers/cycles/actions'
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
 
@@ -39,26 +42,12 @@ export const CycleContext = createContext({} as CycleContextType)
 export const CycleContextProvider = ({
   children,
 }: CycleContextProviderProps) => {
-  const [cyclesState, dispatch] = useReducer(
-    cyclesReducer,
-    {
-      cycles: [],
-      activeCycleId: null,
-    },
-    () => {
-      const storageCycleStateJSON = localStorage.getItem(
-        '@focus:cycle-state/v1.0.0',
-      )
+  const apiPrivate = useApiPrivate()
 
-      if (storageCycleStateJSON) {
-        return JSON.parse(storageCycleStateJSON)
-      }
-      return {
-        cycles: [],
-        activeCycleId: null,
-      }
-    },
-  )
+  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
+    cycles: [],
+    activeCycleId: null,
+  })
 
   const { cycles, activeCycleId } = cyclesState
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
@@ -76,6 +65,20 @@ export const CycleContextProvider = ({
 
     localStorage.setItem('@focus:cycle-state/v1.0.0', cycleStateJSON)
   }, [cyclesState])
+
+  const getCycles = async () => {
+    const response = await apiPrivate.get('/cycles/')
+
+    const cycles = response.data
+    const activeCycleId = null
+    const initialState = {
+      cycles,
+      activeCycleId,
+    }
+
+    // dispatch(intializeState(initialState))
+  }
+  getCycles()
 
   const createNewCycle = (data: CycleFormData) => {
     const id = String(new Date().getTime())
