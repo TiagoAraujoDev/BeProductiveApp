@@ -23,7 +23,7 @@ interface Action {
   }
 }
 
-export function cyclesReducer(state: CycleState, action: Action) {
+export function cyclesReducer(state: CycleState, action: any) {
   switch (action.type) {
     case ActionTypes.ADD_NEW_CYCLE:
       return produce(state, (draft) => {
@@ -60,7 +60,8 @@ export function cyclesReducer(state: CycleState, action: Action) {
     }
     case ActionTypes.INITIALIZE_STATE: {
       return produce(state, (draft) => {
-        console.log(draft)
+        draft.cycles = [...action.payload.cycles]
+        draft.activeCycleId = action.payload.activeCycleId
       })
     }
     default:

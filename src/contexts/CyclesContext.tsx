@@ -31,6 +31,7 @@ interface CycleContextType {
   setCurrentCycleAsFinished: () => void
   interruptCurrentCycle: () => void
   createNewCycle: (data: CycleFormData) => void
+  getCycles: () => void
 }
 
 interface CycleContextProviderProps {
@@ -44,10 +45,19 @@ export const CycleContextProvider = ({
 }: CycleContextProviderProps) => {
   const apiPrivate = useApiPrivate()
 
-  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
-    cycles: [],
-    activeCycleId: null,
-  })
+  const [cyclesState, dispatch] = useReducer(
+    cyclesReducer,
+    {
+      cycles: [],
+      activeCycleId: null,
+    },
+    () => {
+      return {
+        cycles: [],
+        activeCycleId: null,
+      }
+    },
+  )
 
   const { cycles, activeCycleId } = cyclesState
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
@@ -68,17 +78,11 @@ export const CycleContextProvider = ({
 
   const getCycles = async () => {
     const response = await apiPrivate.get('/cycles/')
-
     const cycles = response.data
-    const activeCycleId = null
-    const initialState = {
-      cycles,
-      activeCycleId,
-    }
+    const activeCycle = activeCycleId
 
-    // dispatch(intializeState(initialState))
+    dispatch(intializeState(cycles, activeCycle))
   }
-  getCycles()
 
   const createNewCycle = (data: CycleFormData) => {
     const id = String(new Date().getTime())
@@ -118,6 +122,7 @@ export const CycleContextProvider = ({
         amountSecondsPassed,
         createNewCycle,
         interruptCurrentCycle,
+        getCycles,
       }}
     >
       {children}

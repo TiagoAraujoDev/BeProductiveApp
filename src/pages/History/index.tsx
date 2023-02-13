@@ -1,21 +1,25 @@
 import { formatDistanceToNow } from 'date-fns'
-// import ptBr from 'date-fns/locale/pt-BR'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 
 import { CycleContext } from '../../contexts/CyclesContext'
 
 import { HistoryContainer, HistoryList, Status } from './styles'
 
 export const History = () => {
-  const { cycles } = useContext(CycleContext)
+  const { cycles, getCycles } = useContext(CycleContext)
 
   function formatDate(date: Date): string {
     const formatedDate = formatDistanceToNow(date, {
       addSuffix: true,
-      // locale: ptBr,
     })
     return formatedDate
   }
+
+  useEffect(() => {
+    getCycles()
+    console.log(cycles)
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <HistoryContainer>

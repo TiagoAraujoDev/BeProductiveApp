@@ -7,16 +7,12 @@ export enum ActionTypes {
   INITIALIZE_STATE = 'INITIALIZE_STATE',
 }
 
-interface CycleState {
-  cycles: Cycle[]
-  activeCycleId: string | null
-}
-
-export function intializeState(initialState: CycleState) {
+export function intializeState(cycles: Cycle[], activeCycleId: string | null) {
   return {
     type: ActionTypes.INITIALIZE_STATE,
     payload: {
-      initialState,
+      cycles,
+      activeCycleId,
     },
   }
 }

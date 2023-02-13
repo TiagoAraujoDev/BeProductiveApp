@@ -47,13 +47,11 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const fetchTasks = async (
     controller: AbortController,
     isMounted: Boolean,
-    auth: any,
   ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/tasks/user', {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${auth.token}`,
         },
         signal: controller.signal,
       })
@@ -99,7 +97,7 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const toggleTaskDoneStatus = async (id: string): Promise<void> => {
     try {
       toggleTaskDoneStatusFromState(id)
-      await apiPrivate.put(
+      await apiPrivate.patch(
         '/tasks',
         {},
         {
