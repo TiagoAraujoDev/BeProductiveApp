@@ -10,7 +10,7 @@ export const Countdown = () => {
     activeCycle,
     activeCycleId,
     setSecondsPassed,
-    setCurrentCycleAsFinished,
+    finishCurrentCycle: setCurrentCycleAsFinished,
     amountSecondsPassed,
   } = useContext(CycleContext)
 

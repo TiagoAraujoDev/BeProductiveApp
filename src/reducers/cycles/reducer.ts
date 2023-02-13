@@ -18,12 +18,10 @@ interface CycleState {
 
 interface Action {
   type: string
-  payload?: {
-    newCycle: Cycle
-  }
+  payload?: any
 }
 
-export function cyclesReducer(state: CycleState, action: any) {
+export function cyclesReducer(state: CycleState, action: Action) {
   switch (action.type) {
     case ActionTypes.ADD_NEW_CYCLE:
       return produce(state, (draft) => {

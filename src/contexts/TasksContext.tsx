@@ -18,11 +18,7 @@ interface TaskFormData {
 interface TaskContextType {
   tasks: Task[]
   taskTitle: string
-  fetchTasks: (
-    controller: AbortController,
-    isMounted: boolean,
-    auth: any,
-  ) => void
+  fetchTasks: (controller: AbortController, isMounted: boolean) => void
   createTask: (data: TaskFormData) => Promise<void>
   toggleTaskDoneStatus: (id: string) => Promise<void>
   deleteTask: (id: string) => Promise<void>
@@ -43,7 +39,6 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const [taskTitle, setTaskTitle] = useState('')
   const [tasks, setTask] = useState<Task[]>([])
 
-  //  TODO: Isolate the api requests in its own file
   const fetchTasks = async (
     controller: AbortController,
     isMounted: Boolean,
@@ -59,8 +54,6 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
       isMounted && setTask(response.data.userTasks)
     } catch (err: any) {
       if (err) {
-        console.log(err?.response?.data)
-        // Redirection to login if refresh token expires
         if (err?.response?.status === 403) {
           navigate('/signin')
         }
@@ -77,8 +70,10 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
       setTask((state) => {
         return [...state, newTask]
       })
-    } catch (err) {
-      navigate('/signin')
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
     }
   }
   const deleteTask = async (id: string): Promise<void> => {
@@ -89,8 +84,10 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
           id: `${id}`,
         },
       })
-    } catch (err) {
-      navigate('/signin')
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
     }
   }
 
@@ -106,8 +103,10 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
           },
         },
       )
-    } catch (err) {
-      console.log(err)
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
     }
   }
 
