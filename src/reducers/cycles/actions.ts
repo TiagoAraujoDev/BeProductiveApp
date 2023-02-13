@@ -7,7 +7,10 @@ export enum ActionTypes {
   INITIALIZE_STATE = 'INITIALIZE_STATE',
 }
 
-export function intializeState(cycles: Cycle[], activeCycleId: string | null) {
+export function intializeStateAction(
+  cycles: Cycle[],
+  activeCycleId: string | null,
+) {
   return {
     type: ActionTypes.INITIALIZE_STATE,
     payload: {

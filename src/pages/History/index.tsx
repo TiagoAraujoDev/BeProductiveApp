@@ -6,7 +6,7 @@ import { CycleContext } from '../../contexts/CyclesContext'
 import { HistoryContainer, HistoryList, Status } from './styles'
 
 export const History = () => {
-  const { cycles, getCycles } = useContext(CycleContext)
+  const { cycles, fetchCycles: getCycles } = useContext(CycleContext)
 
   function formatDate(date: Date): string {
     const formatedDate = formatDistanceToNow(date, {
@@ -16,8 +16,14 @@ export const History = () => {
   }
 
   useEffect(() => {
-    getCycles()
-    console.log(cycles)
+    let isMounted = true
+    const controller = new AbortController()
+    getCycles(controller, isMounted)
+
+    return () => {
+      isMounted = false
+      controller.abort()
+    }
     // eslint-disable-next-line
   }, [])
 

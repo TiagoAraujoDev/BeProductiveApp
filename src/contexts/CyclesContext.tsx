@@ -1,21 +1,15 @@
 import { differenceInSeconds } from 'date-fns'
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useReducer,
-  useState,
-} from 'react'
-import { useApiPrivate } from '../hooks/useAxiosPrivate'
+import { createContext, ReactNode, useReducer, useState } from 'react'
 
 import {
   addNewCycleAction,
   interruptCurrentCycleAction,
   markCurrentCycleAsFinishedAction,
-  intializeState,
+  intializeStateAction,
 } from '../reducers/cycles/actions'
+import { useApiPrivate } from '../hooks/useAxiosPrivate'
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
+import { useNavigate } from 'react-router-dom'
 
 interface CycleFormData {
   task: string
@@ -28,10 +22,10 @@ interface CycleContextType {
   activeCycleId: string | null
   amountSecondsPassed: number
   setSecondsPassed: (sec: number) => void
-  setCurrentCycleAsFinished: () => void
+  finishCurrentCycle: () => void
   interruptCurrentCycle: () => void
   createNewCycle: (data: CycleFormData) => void
-  getCycles: () => void
+  fetchCycles: (controller: AbortController, isMounted: boolean) => void
 }
 
 interface CycleContextProviderProps {
@@ -44,6 +38,7 @@ export const CycleContextProvider = ({
   children,
 }: CycleContextProviderProps) => {
   const apiPrivate = useApiPrivate()
+  const navigate = useNavigate()
 
   const [cyclesState, dispatch] = useReducer(
     cyclesReducer,
@@ -70,45 +65,92 @@ export const CycleContextProvider = ({
     return 0
   })
 
-  useEffect(() => {
-    const cycleStateJSON = JSON.stringify(cyclesState)
+  const fetchCycles = async (
+    controller: AbortController,
+    isMounted: boolean,
+  ): Promise<void> => {
+    try {
+      const response = await apiPrivate.get('/cycles', {
+        signal: controller.signal,
+      })
+      const cycles = response.data
+      const activeCycle = activeCycleId
 
-    localStorage.setItem('@focus:cycle-state/v1.0.0', cycleStateJSON)
-  }, [cyclesState])
-
-  const getCycles = async () => {
-    const response = await apiPrivate.get('/cycles/')
-    const cycles = response.data
-    const activeCycle = activeCycleId
-
-    dispatch(intializeState(cycles, activeCycle))
-  }
-
-  const createNewCycle = (data: CycleFormData) => {
-    const id = String(new Date().getTime())
-
-    const newCycle: Cycle = {
-      id,
-      task: data.task,
-      minutesAmount: data.minutesAmount,
-      startDate: new Date(),
+      isMounted && dispatch(intializeStateAction(cycles, activeCycle))
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
     }
-
-    dispatch(addNewCycleAction(newCycle))
-
-    setAmountSecondsPassed(0)
   }
 
-  const interruptCurrentCycle = () => {
-    dispatch(interruptCurrentCycleAction())
+  const createNewCycle = async (data: CycleFormData) => {
+    try {
+      const response = await apiPrivate.post('/cycles', {
+        task: data.task,
+        minutesAmount: data.minutesAmount,
+        startDate: new Date(),
+      })
+
+      const cycle: Cycle = response.data
+
+      const newCycle: Cycle = {
+        id: cycle.id,
+        task: cycle.task,
+        minutesAmount: cycle.minutesAmount,
+        startDate: cycle.startDate,
+      }
+
+      dispatch(addNewCycleAction(newCycle))
+
+      setAmountSecondsPassed(0)
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
+    }
+  }
+
+  const interruptCurrentCycle = async () => {
+    try {
+      await apiPrivate.patch(
+        '/cycles/cycle/interrupt',
+        {},
+        {
+          headers: {
+            id: `${activeCycle?.id}`,
+          },
+        },
+      )
+      dispatch(interruptCurrentCycleAction())
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
+    }
+  }
+
+  const finishCurrentCycle = async () => {
+    try {
+      await apiPrivate.patch(
+        '/cycles/cycle/finish',
+        {},
+        {
+          headers: {
+            id: activeCycle?.id,
+          },
+        },
+      )
+      dispatch(markCurrentCycleAsFinishedAction())
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
+    }
   }
 
   const setSecondsPassed = (seconds: number) => {
     setAmountSecondsPassed(seconds)
-  }
-
-  const setCurrentCycleAsFinished = () => {
-    dispatch(markCurrentCycleAsFinishedAction())
   }
 
   return (
@@ -117,12 +159,12 @@ export const CycleContextProvider = ({
         cycles,
         activeCycle,
         activeCycleId,
-        setSecondsPassed,
-        setCurrentCycleAsFinished,
         amountSecondsPassed,
+        setSecondsPassed,
+        finishCurrentCycle,
         createNewCycle,
         interruptCurrentCycle,
-        getCycles,
+        fetchCycles,
       }}
     >
       {children}
