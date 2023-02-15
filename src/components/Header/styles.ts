@@ -58,3 +58,24 @@ export const ThemeButton = styled.button`
   align-items: center;
   justify-content: center;
 `
+
+export const ProfileInfoContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+`
+
+export const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-right: 0.5rem;
+
+  &:first-child {
+    color: ${(props) => props.theme['gray-100']};
+  }
+  & > span + span {
+    color: ${(props) => props.theme['gray-400']};
+  }
+`
