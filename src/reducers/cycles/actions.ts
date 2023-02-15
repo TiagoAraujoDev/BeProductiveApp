@@ -4,6 +4,7 @@ export enum ActionTypes {
   ADD_NEW_CYCLE = 'ADD_NEW_CYCLE',
   INTERRUPT_CURRENT_CYCLE = 'INTERRUPT_CURRENT_CYCLE',
   MARK_CURRENT_CYCLE_AS_FINISHED = 'MARK_CURRENT_CYCLE_AS_FINISHED',
+  DELETE_CYCLE_FROM_HISTORY = 'DELETE_CYCLE_FROM_HISTORY',
   INITIALIZE_STATE = 'INITIALIZE_STATE',
 }
 
@@ -38,5 +39,14 @@ export function interruptCurrentCycleAction() {
 export function markCurrentCycleAsFinishedAction() {
   return {
     type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
+  }
+}
+
+export function deleteCycleFromHistoryAction(id: string) {
+  return {
+    type: ActionTypes.DELETE_CYCLE_FROM_HISTORY,
+    payload: {
+      id,
+    },
   }
 }

@@ -56,6 +56,23 @@ export function cyclesReducer(state: CycleState, action: Action) {
         draft.activeCycleId = null
       })
     }
+    case ActionTypes.DELETE_CYCLE_FROM_HISTORY: {
+      const cycleIndex = state.cycles.findIndex(
+        (cycle) => action.payload.id === cycle.id,
+      )
+
+      if (cycleIndex === -1) {
+        return state
+      }
+
+      const updatedCycles = state.cycles.filter(
+        (cycle) => cycle.id !== action.payload.id,
+      )
+
+      return produce(state, (draft) => {
+        draft.cycles = [...updatedCycles]
+      })
+    }
     case ActionTypes.INITIALIZE_STATE: {
       return produce(state, (draft) => {
         draft.cycles = [...action.payload.cycles]

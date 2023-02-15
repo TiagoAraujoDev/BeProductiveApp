@@ -4,6 +4,7 @@ import { createContext, ReactNode, useReducer, useState } from 'react'
 import {
   addNewCycleAction,
   interruptCurrentCycleAction,
+  deleteCycleFromHistoryAction,
   markCurrentCycleAsFinishedAction,
   intializeStateAction,
 } from '../reducers/cycles/actions'
@@ -24,6 +25,7 @@ interface CycleContextType {
   setSecondsPassed: (sec: number) => void
   finishCurrentCycle: () => void
   interruptCurrentCycle: () => void
+  deleteCycle: (id: string) => void
   createNewCycle: (data: CycleFormData) => void
   fetchCycles: (controller: AbortController, isMounted: boolean) => void
 }
@@ -111,6 +113,24 @@ export const CycleContextProvider = ({
     }
   }
 
+  const deleteCycle = async (id: string) => {
+    try {
+      const response = await apiPrivate.delete('/cycles/cycle', {
+        headers: {
+          id,
+        },
+      })
+
+      if (response?.status === 204) {
+        dispatch(deleteCycleFromHistoryAction(id))
+      }
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/signin')
+      }
+    }
+  }
+
   const interruptCurrentCycle = async () => {
     try {
       await apiPrivate.patch(
@@ -164,6 +184,7 @@ export const CycleContextProvider = ({
         finishCurrentCycle,
         createNewCycle,
         interruptCurrentCycle,
+        deleteCycle,
         fetchCycles,
       }}
     >

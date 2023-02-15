@@ -1,12 +1,18 @@
 import { formatDistanceToNow } from 'date-fns'
+import { X } from 'phosphor-react'
 import { useContext, useEffect } from 'react'
 
 import { CycleContext } from '../../contexts/CyclesContext'
 
-import { HistoryContainer, HistoryList, Status } from './styles'
+import {
+  HistoryContainer,
+  HistoryList,
+  Status,
+  StatusContainer,
+} from './styles'
 
 export const History = () => {
-  const { cycles, fetchCycles: getCycles } = useContext(CycleContext)
+  const { cycles, fetchCycles, deleteCycle } = useContext(CycleContext)
 
   function formatDate(date: Date): string {
     const formatedDate = formatDistanceToNow(date, {
@@ -15,10 +21,14 @@ export const History = () => {
     return formatedDate
   }
 
+  const handleDeleteCycle = (id: string) => {
+    deleteCycle(id)
+  }
+
   useEffect(() => {
     let isMounted = true
     const controller = new AbortController()
-    getCycles(controller, isMounted)
+    fetchCycles(controller, isMounted)
 
     return () => {
       isMounted = false
@@ -48,15 +58,23 @@ export const History = () => {
                   <td>{cycle.minutesAmount} minutes</td>
                   <td>{formatDate(new Date(cycle.startDate))}</td>
                   <td>
-                    {cycle.finishedDate && (
-                      <Status statusColor={'green'}>Completed</Status>
-                    )}
-                    {cycle.interruptedDate && (
-                      <Status statusColor={'red'}>Interrupted</Status>
-                    )}
-                    {!cycle.interruptedDate && !cycle.finishedDate && (
-                      <Status statusColor={'yellow'}>In progress</Status>
-                    )}
+                    <StatusContainer>
+                      {cycle.finishedDate && (
+                        <Status statusColor={'green'}>Completed</Status>
+                      )}
+                      {cycle.interruptedDate && (
+                        <Status statusColor={'red'}>Interrupted</Status>
+                      )}
+                      {!cycle.interruptedDate && !cycle.finishedDate && (
+                        <Status statusColor={'yellow'}>In progress</Status>
+                      )}
+                      <span
+                        className="delete"
+                        onClick={() => handleDeleteCycle(cycle.id)}
+                      >
+                        <X size={18} />
+                      </span>
+                    </StatusContainer>
                   </td>
                 </tr>
               )

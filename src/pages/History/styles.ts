@@ -36,6 +36,36 @@ export const Status = styled.span<StatusProps>`
   }
 `
 
+export const StatusContainer = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid ${(props) => props.theme['gray-400']};
+    border-radius: 50%;
+
+    svg {
+      color: ${(props) => props.theme['gray-400']};
+      &:hover {
+        color: ${(props) => props.theme['red-500']};
+        transition: all ease-in 0.2s;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      border: 1px solid ${(props) => props.theme['red-500']};
+      color: ${(props) => props.theme['red-500']};
+      transition: all ease-in 0.2s;
+    }
+  }
+`
+
 export const HistoryList = styled.div`
   flex: 1;
   overflow: auto;
