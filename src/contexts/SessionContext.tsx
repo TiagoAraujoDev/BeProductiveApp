@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../config/api/axios'
+import { useApiPrivate } from '../hooks/useAxiosPrivate'
 
 interface NewUserFormData {
   name: string
@@ -41,6 +42,7 @@ interface SessionContextType {
   registerNewUser: (data: NewUserFormData) => Promise<boolean | undefined>
   authUser: (data: any) => Promise<void>
   updateAuthToken: (token: string) => void
+  avatarUpload: (file: File) => void
 }
 
 export const SessionContext = createContext({} as SessionContextType)
@@ -49,9 +51,10 @@ export const SessionContextProvider = ({
   children,
 }: SessionContextProviderProps) => {
   const [auth, setAuth] = useState<Auth>({} as Auth)
-  const [_, setUser] = useState<User>()
+  const [user, setUser] = useState<User>()
   const [errorMessage, setErrorMessage] = useState<string>('')
 
+  const apiPrivate = useApiPrivate()
   const navigate = useNavigate()
 
   const registerNewUser = async (data: NewUserFormData) => {
@@ -82,6 +85,19 @@ export const SessionContextProvider = ({
     }
   }
 
+  const avatarUpload = async (file: File) => {
+    try {
+      const uploadAvatarForm = new FormData()
+      uploadAvatarForm.append('avatar', file)
+
+      await apiPrivate.post('users/avatar', uploadAvatarForm)
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/')
+      }
+    }
+  }
+
   const authUser = async (data: SignInFormData) => {
     try {
       const response = await api.post('/users/login', data, {
@@ -91,7 +107,7 @@ export const SessionContextProvider = ({
         withCredentials: true,
       })
 
-      const responseData = await response.data
+      const responseData = response.data
       setAuth(responseData)
 
       navigate('/')
@@ -128,6 +144,7 @@ export const SessionContextProvider = ({
         auth,
         errorMessage,
         updateAuthToken,
+        avatarUpload,
       }}
     >
       {children}
