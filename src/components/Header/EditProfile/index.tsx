@@ -4,14 +4,17 @@ import React, { ReactNode, useContext, useState } from 'react'
 import { SessionContext } from '../../../contexts/SessionContext'
 
 import { Avatar, Close, Content, Form, Ovarlay, Title } from './styles'
+import imagePlaceholder from '../../../assets/placeholder.png'
 
 interface DialogProps {
   children: ReactNode
 }
 
 export const EditProfile = ({ children }: DialogProps) => {
-  const { avatarUpload } = useContext(SessionContext)
-  const [avatar, setAvatar] = useState('')
+  const { avatarUpload, user } = useContext(SessionContext)
+
+  const avatarUrl = user?.avatar || imagePlaceholder
+  const [avatar, setAvatar] = useState<string>('')
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -23,6 +26,7 @@ export const EditProfile = ({ children }: DialogProps) => {
       setAvatar(imagePreview)
     }
   }
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
@@ -31,12 +35,12 @@ export const EditProfile = ({ children }: DialogProps) => {
         <Content>
           <Title>Edit your profile</Title>
           <Avatar>
-            <img
-              src={
-                avatar || 'https://avatars.githubusercontent.com/TiagoAraujoDev'
-              }
-              alt="avatar profile"
-            />
+            {/* <img src={avatar} alt="Profile avatar" /> */}
+            {avatar ? (
+              <img src={avatar} alt="Profile avatar" />
+            ) : (
+              <img src={avatarUrl} alt="Profile avatar" />
+            )}
             <label htmlFor="avatar">
               <Camera size={16} />
               <input

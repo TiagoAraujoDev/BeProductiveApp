@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import {
   CheckSquareOffset,
   Gear,
@@ -22,13 +22,26 @@ import {
 import { Avatar } from './Avatar'
 import { EditProfile } from './EditProfile'
 import { TriggerContainer } from './EditProfile/styles'
+import { SessionContext } from '../../contexts/SessionContext'
 
 export const Header = () => {
   const { changeTheme, themeName } = useContext(ThemeToggleContext)
+  const { fetchUserData, user } = useContext(SessionContext)
 
   const handleChangeTheme = () => {
     changeTheme()
   }
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetchUserData(controller)
+
+    return () => {
+      controller.abort()
+    }
+
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <HeaderContainer>
@@ -61,10 +74,10 @@ export const Header = () => {
       </nav>
       <ProfileInfoContainer>
         <ProfileInfo>
-          <span>TiagoDev</span>
-          <span>tiagoaraujo@gmail.com</span>
+          <span>{user?.username}</span>
+          <span>{user?.email}</span>
         </ProfileInfo>
-        <Avatar />
+        <Avatar url={user?.avatar} />
       </ProfileInfoContainer>
     </HeaderContainer>
   )

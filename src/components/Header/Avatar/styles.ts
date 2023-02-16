@@ -7,4 +7,5 @@ export const AvatarImage = styled(Radix.Image)`
   border: 2px solid ${(props) => props.theme['gray-900']};
   outline: 3px solid ${(props) => props.theme['green-500']};
   border-radius: 50%;
+  object-fit: cover;
 `

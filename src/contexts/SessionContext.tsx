@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import { api } from '../config/api/axios'
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
 
@@ -38,11 +39,13 @@ interface SessionContextProviderProps {
 
 interface SessionContextType {
   auth: Auth
+  user: User | undefined
   errorMessage: string
   registerNewUser: (data: NewUserFormData) => Promise<boolean | undefined>
   authUser: (data: any) => Promise<void>
   updateAuthToken: (token: string) => void
   avatarUpload: (file: File) => void
+  fetchUserData: (controller: AbortController) => void
 }
 
 export const SessionContext = createContext({} as SessionContextType)
@@ -81,6 +84,19 @@ export const SessionContextProvider = ({
           break
         default:
           setErrorMessage('Unexpected Error!')
+      }
+    }
+  }
+
+  const fetchUserData = async (controller: AbortController) => {
+    try {
+      const response = await apiPrivate('/users/user', {
+        signal: controller.signal,
+      })
+      setUser(response.data)
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/')
       }
     }
   }
@@ -142,9 +158,11 @@ export const SessionContextProvider = ({
         registerNewUser,
         authUser,
         auth,
+        user,
         errorMessage,
         updateAuthToken,
         avatarUpload,
+        fetchUserData,
       }}
     >
       {children}
