@@ -1,5 +1,12 @@
 import { differenceInSeconds } from 'date-fns'
-import { createContext, ReactNode, useReducer, useState } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   addNewCycleAction,
@@ -10,7 +17,6 @@ import {
 } from '../reducers/cycles/actions'
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
-import { useNavigate } from 'react-router-dom'
 
 interface CycleFormData {
   task: string
@@ -42,6 +48,7 @@ export const CycleContextProvider = ({
   const apiPrivate = useApiPrivate()
   const navigate = useNavigate()
 
+  const [isFirstLoad, setIsFirstLoad] = useState(true)
   const [cyclesState, dispatch] = useReducer(
     cyclesReducer,
     {
@@ -67,6 +74,30 @@ export const CycleContextProvider = ({
     return 0
   })
 
+  useEffect(() => {
+    if (isFirstLoad) {
+      const controller = new AbortController()
+      let isMounted = true
+
+      fetchCycles(controller, isMounted)
+
+      setIsFirstLoad(false)
+
+      return () => {
+        controller.abort()
+        isMounted = false
+      }
+    } else {
+      console.log('here')
+      localStorage.setItem(
+        '@focus:ActiveCycleId',
+        `${cyclesState.activeCycleId}`,
+      )
+    }
+
+    // eslint-disable-next-line
+  }, [cyclesState])
+
   const fetchCycles = async (
     controller: AbortController,
     isMounted: boolean,
@@ -76,9 +107,10 @@ export const CycleContextProvider = ({
         signal: controller.signal,
       })
       const cycles = response.data
-      const activeCycle = activeCycleId
 
-      isMounted && dispatch(intializeStateAction(cycles, activeCycle))
+      const activeCycleId = localStorage.getItem('@focus:ActiveCycleId')
+
+      isMounted && dispatch(intializeStateAction(cycles, activeCycleId))
     } catch (err: any) {
       if (err?.response?.status === 403) {
         navigate('/signin')
@@ -102,6 +134,8 @@ export const CycleContextProvider = ({
         minutesAmount: cycle.minutesAmount,
         startDate: cycle.startDate,
       }
+      const activeCycleId = cycle.id
+      localStorage.setItem('@focus:ActiveCycleId', activeCycleId)
 
       dispatch(addNewCycleAction(newCycle))
 
