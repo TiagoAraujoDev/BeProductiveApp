@@ -1,30 +1,55 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { Camera, X } from 'phosphor-react'
-import React, { ReactNode, useContext, useState } from 'react'
-import { SessionContext } from '../../../contexts/SessionContext'
+import { X } from 'phosphor-react'
+import { ReactNode, useContext, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import * as zod from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import { AvatarUpload } from './AvatarUpload'
+import { EditProfileForm } from './EditProfileForm'
 
 import { Avatar, Close, Content, Form, Ovarlay, Title } from './styles'
-import imagePlaceholder from '../../../assets/placeholder.png'
+import { SessionContext } from '../../../contexts/SessionContext'
 
 interface DialogProps {
   children: ReactNode
 }
 
+const editProfileFormValidationSchema = zod.object({
+  username: zod.string().optional(),
+  email: zod.string().optional(),
+})
+
+type EditProfileFormData = zod.infer<typeof editProfileFormValidationSchema>
+
 export const EditProfile = ({ children }: DialogProps) => {
-  const { avatarUpload, user } = useContext(SessionContext)
+  const { updateUserProfile } = useContext(SessionContext)
+  const [hasChanges, setHasChange] = useState<boolean>(false)
 
-  const avatarUrl = user?.avatar || imagePlaceholder
-  const [avatar, setAvatar] = useState<string>('')
+  const editProfileForm = useForm<EditProfileFormData>({
+    resolver: zodResolver(editProfileFormValidationSchema),
+    defaultValues: {
+      username: '',
+      email: '',
+    },
+  })
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const file = e.target.files![0]
-      if (file) {
-        avatarUpload(file)
-      }
-      const imagePreview = URL.createObjectURL(file)
-      setAvatar(imagePreview)
+  const { handleSubmit, reset } = editProfileForm
+
+  const handleRefresh = (): void => {
+    if (hasChanges) {
+      window.location.reload()
     }
+  }
+
+  const handleChanges = (): void => {
+    setHasChange(true)
+  }
+
+  const handleUpdateProfile = (data: EditProfileFormData): void => {
+    updateUserProfile(data)
+    reset()
+    handleChanges()
   }
 
   return (
@@ -35,44 +60,17 @@ export const EditProfile = ({ children }: DialogProps) => {
         <Content>
           <Title>Edit your profile</Title>
           <Avatar>
-            {/* <img src={avatar} alt="Profile avatar" /> */}
-            {avatar ? (
-              <img src={avatar} alt="Profile avatar" />
-            ) : (
-              <img src={avatarUrl} alt="Profile avatar" />
-            )}
-            <label htmlFor="avatar">
-              <Camera size={16} />
-              <input
-                type="file"
-                name="avatar"
-                id="avatar"
-                onChange={handleAvatarUpload}
-              />
-            </label>
+            <AvatarUpload handleChanges={handleChanges} />
           </Avatar>
-          <Form>
-            <label htmlFor="username">username</label>
-            <input
-              type="text"
-              name="username"
-              id="username"
-              autoComplete="off"
-              placeholder="Username"
-            />
-            <label htmlFor="email">email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              autoComplete="off"
-              placeholder="E-mail"
-            />
-            <button>Save</button>
+          <Form onSubmit={handleSubmit(handleUpdateProfile)}>
+            <FormProvider {...editProfileForm}>
+              <EditProfileForm />
+            </FormProvider>
           </Form>
-          {/* Form End */}
           <Close asChild>
-            <X />
+            <button onClick={handleRefresh}>
+              <X />
+            </button>
           </Close>
         </Content>
       </Dialog.Portal>

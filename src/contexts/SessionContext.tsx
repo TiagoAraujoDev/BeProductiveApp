@@ -16,6 +16,11 @@ interface SignInFormData {
   password: string
 }
 
+interface UserProfileData {
+  username?: string
+  email?: string
+}
+
 interface User {
   id: string
   name: string
@@ -46,6 +51,7 @@ interface SessionContextType {
   updateAuthToken: (token: string) => void
   avatarUpload: (file: File) => void
   fetchUserData: (controller: AbortController) => void
+  updateUserProfile: (data: UserProfileData) => void
 }
 
 export const SessionContext = createContext({} as SessionContextType)
@@ -94,6 +100,16 @@ export const SessionContextProvider = ({
         signal: controller.signal,
       })
       setUser(response.data)
+    } catch (err: any) {
+      if (err?.response?.status === 403) {
+        navigate('/')
+      }
+    }
+  }
+
+  const updateUserProfile = async (data: UserProfileData) => {
+    try {
+      await apiPrivate.post('/users/user', data)
     } catch (err: any) {
       if (err?.response?.status === 403) {
         navigate('/')
@@ -163,6 +179,7 @@ export const SessionContextProvider = ({
         updateAuthToken,
         avatarUpload,
         fetchUserData,
+        updateUserProfile,
       }}
     >
       {children}

@@ -130,15 +130,21 @@ export const Form = styled.form`
 `
 
 export const Close = styled(Dialog.Close)`
-  width: 1.3rem;
-  height: 1.3rem;
-  position: absolute;
-  top: 15px;
-  right: 15px;
+  background-color: transparent;
+  border: none;
 
-  cursor: pointer;
+  > svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: ${(props) => props.theme['gray-300']};
 
-  &:hover {
-    color: ${(props) => props.theme['red-500']};
+    cursor: pointer;
+
+    &:hover {
+      color: ${(props) => props.theme['red-500']};
+    }
   }
 `
