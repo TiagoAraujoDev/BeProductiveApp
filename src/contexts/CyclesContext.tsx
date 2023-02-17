@@ -2,6 +2,7 @@ import { differenceInSeconds } from 'date-fns'
 import {
   createContext,
   ReactNode,
+  useContext,
   useEffect,
   useReducer,
   useState,
@@ -17,6 +18,7 @@ import {
 } from '../reducers/cycles/actions'
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
+import { Auth, SessionContext } from './SessionContext'
 
 interface CycleFormData {
   task: string
@@ -33,7 +35,11 @@ interface CycleContextType {
   interruptCurrentCycle: () => void
   deleteCycle: (id: string) => void
   createNewCycle: (data: CycleFormData) => void
-  fetchCycles: (controller: AbortController, isMounted: boolean) => void
+  fetchCycles: (
+    controller: AbortController,
+    isMounted: boolean,
+    auth?: Auth,
+  ) => void
 }
 
 interface CycleContextProviderProps {
@@ -47,6 +53,8 @@ export const CycleContextProvider = ({
 }: CycleContextProviderProps) => {
   const apiPrivate = useApiPrivate()
   const navigate = useNavigate()
+
+  const { auth } = useContext(SessionContext)
 
   const [isFirstLoad, setIsFirstLoad] = useState(true)
   const [cyclesState, dispatch] = useReducer(
@@ -79,7 +87,7 @@ export const CycleContextProvider = ({
       const controller = new AbortController()
       let isMounted = true
 
-      fetchCycles(controller, isMounted)
+      fetchCycles(controller, isMounted, auth)
 
       setIsFirstLoad(false)
 
@@ -101,10 +109,14 @@ export const CycleContextProvider = ({
   const fetchCycles = async (
     controller: AbortController,
     isMounted: boolean,
+    auth?: Auth,
   ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/cycles', {
         signal: controller.signal,
+        headers: {
+          Authorization: `Bearer ${auth?.token}`,
+        },
       })
       const cycles = response.data
 

@@ -30,7 +30,7 @@ interface User {
   created_at?: string
 }
 
-interface Auth {
+export interface Auth {
   token: string
   user?: {
     id: string
@@ -50,7 +50,7 @@ interface SessionContextType {
   authUser: (data: any) => Promise<void>
   updateAuthToken: (token: string) => void
   avatarUpload: (file: File) => void
-  fetchUserData: (controller: AbortController) => void
+  fetchUserData: (controller: AbortController, token: string) => void
   updateUserProfile: (data: UserProfileData) => void
 }
 
@@ -94,9 +94,12 @@ export const SessionContextProvider = ({
     }
   }
 
-  const fetchUserData = async (controller: AbortController) => {
+  const fetchUserData = async (controller: AbortController, token: string) => {
     try {
       const response = await apiPrivate('/users/user', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         signal: controller.signal,
       })
       setUser(response.data)

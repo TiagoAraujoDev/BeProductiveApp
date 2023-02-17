@@ -26,7 +26,7 @@ import { SessionContext } from '../../contexts/SessionContext'
 
 export const Header = () => {
   const { changeTheme, themeName } = useContext(ThemeToggleContext)
-  const { fetchUserData, user } = useContext(SessionContext)
+  const { fetchUserData, user, auth } = useContext(SessionContext)
 
   const handleChangeTheme = () => {
     changeTheme()
@@ -34,7 +34,7 @@ export const Header = () => {
 
   useEffect(() => {
     const controller = new AbortController()
-    fetchUserData(controller)
+    fetchUserData(controller, auth.token)
 
     return () => {
       controller.abort()

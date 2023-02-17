@@ -18,7 +18,11 @@ interface TaskFormData {
 interface TaskContextType {
   tasks: Task[]
   taskTitle: string
-  fetchTasks: (controller: AbortController, isMounted: boolean) => void
+  fetchTasks: (
+    controller: AbortController,
+    isMounted: boolean,
+    token: string,
+  ) => void
   createTask: (data: TaskFormData) => Promise<void>
   toggleTaskDoneStatus: (id: string) => Promise<void>
   deleteTask: (id: string) => Promise<void>
@@ -42,11 +46,13 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const fetchTasks = async (
     controller: AbortController,
     isMounted: Boolean,
+    token: string,
   ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/tasks/user', {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         signal: controller.signal,
       })
