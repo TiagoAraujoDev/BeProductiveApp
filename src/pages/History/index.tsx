@@ -3,6 +3,7 @@ import { X } from 'phosphor-react'
 import { useContext, useEffect } from 'react'
 
 import { CycleContext } from '../../contexts/CyclesContext'
+import { SessionContext } from '../../contexts/SessionContext'
 
 import {
   HistoryContainer,
@@ -13,6 +14,7 @@ import {
 
 export const History = () => {
   const { cycles, fetchCycles, deleteCycle } = useContext(CycleContext)
+  const { auth } = useContext(SessionContext)
 
   function formatDate(date: Date): string {
     const formatedDate = formatDistanceToNow(date, {
@@ -28,7 +30,7 @@ export const History = () => {
   useEffect(() => {
     let isMounted = true
     const controller = new AbortController()
-    fetchCycles(controller, isMounted)
+    fetchCycles(controller, isMounted, auth)
 
     return () => {
       isMounted = false
