@@ -30,7 +30,7 @@ export const History = () => {
   useEffect(() => {
     let isMounted = true
     const controller = new AbortController()
-    fetchCycles(controller, isMounted, auth)
+    fetchCycles(controller, isMounted, auth.token)
 
     return () => {
       isMounted = false
