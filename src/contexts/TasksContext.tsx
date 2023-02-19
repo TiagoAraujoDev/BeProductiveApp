@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { createContext, ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -59,10 +60,11 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
 
       isMounted && setTask(response.data.userTasks)
     } catch (err: any) {
-      if (err) {
-        if (err?.response?.status === 403) {
-          navigate('/signin')
-        }
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -77,8 +79,11 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         return [...state, newTask]
       })
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -91,8 +96,11 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         },
       })
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -110,8 +118,11 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         },
       )
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }

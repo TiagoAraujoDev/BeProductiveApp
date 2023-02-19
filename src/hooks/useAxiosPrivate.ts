@@ -25,13 +25,14 @@ export const useApiPrivate = () => {
       (response) => {
         return response
       },
-      async (error) => {
+      (error) => {
         const prevRequest = error?.config
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true
-          const newToken = await refresh()
-          prevRequest.headers.Authorization = `Bearer ${newToken}`
-          return apiPrivate(prevRequest)
+          refresh().then((newToken) => {
+            prevRequest.headers.Authorization = `Bearer ${newToken}`
+            return apiPrivate(prevRequest)
+          })
         }
         return Promise.reject(error)
       },

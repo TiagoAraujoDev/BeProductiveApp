@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { createContext, ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -104,8 +105,11 @@ export const SessionContextProvider = ({
       })
       setUser(response.data)
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -114,8 +118,11 @@ export const SessionContextProvider = ({
     try {
       await apiPrivate.post('/users/user', data)
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -127,8 +134,11 @@ export const SessionContextProvider = ({
 
       await apiPrivate.post('users/avatar', uploadAvatarForm)
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }

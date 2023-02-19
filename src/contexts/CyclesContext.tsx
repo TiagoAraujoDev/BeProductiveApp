@@ -7,7 +7,8 @@ import {
   useReducer,
   useState,
 } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { AxiosError } from 'axios'
+// import { useNavigate } from 'react-router-dom'
 
 import {
   addNewCycleAction,
@@ -18,7 +19,7 @@ import {
 } from '../reducers/cycles/actions'
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
-import { Auth, SessionContext } from './SessionContext'
+import { SessionContext } from './SessionContext'
 
 interface CycleFormData {
   task: string
@@ -38,7 +39,7 @@ interface CycleContextType {
   fetchCycles: (
     controller: AbortController,
     isMounted: boolean,
-    auth?: Auth,
+    token: string,
   ) => void
 }
 
@@ -52,7 +53,7 @@ export const CycleContextProvider = ({
   children,
 }: CycleContextProviderProps) => {
   const apiPrivate = useApiPrivate()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const { auth } = useContext(SessionContext)
 
@@ -87,7 +88,7 @@ export const CycleContextProvider = ({
       const controller = new AbortController()
       let isMounted = true
 
-      fetchCycles(controller, isMounted, auth)
+      fetchCycles(controller, isMounted, auth.token)
 
       setIsFirstLoad(false)
 
@@ -109,13 +110,13 @@ export const CycleContextProvider = ({
   const fetchCycles = async (
     controller: AbortController,
     isMounted: boolean,
-    auth?: Auth,
+    token: string,
   ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/cycles', {
         signal: controller.signal,
         headers: {
-          Authorization: `Bearer ${auth?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       const cycles = response.data
@@ -124,8 +125,11 @@ export const CycleContextProvider = ({
 
       isMounted && dispatch(intializeStateAction(cycles, activeCycleId))
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -153,8 +157,11 @@ export const CycleContextProvider = ({
 
       setAmountSecondsPassed(0)
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -171,8 +178,11 @@ export const CycleContextProvider = ({
         dispatch(deleteCycleFromHistoryAction(id))
       }
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -190,8 +200,11 @@ export const CycleContextProvider = ({
       )
       dispatch(interruptCurrentCycleAction())
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
@@ -209,8 +222,11 @@ export const CycleContextProvider = ({
       )
       dispatch(markCurrentCycleAsFinishedAction())
     } catch (err: any) {
-      if (err?.response?.status === 403) {
-        navigate('/signin')
+      if (err instanceof AxiosError) {
+        console.log('name', err.name)
+        console.log('code', err.code)
+        console.log('message', err.message)
+        console.log('Stack', err.stack)
       }
     }
   }
