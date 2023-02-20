@@ -1,14 +1,13 @@
 import { differenceInSeconds } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 import {
   createContext,
   ReactNode,
-  useContext,
   useEffect,
   useReducer,
   useState,
 } from 'react'
 import { AxiosError } from 'axios'
-// import { useNavigate } from 'react-router-dom'
 
 import {
   addNewCycleAction,
@@ -19,7 +18,6 @@ import {
 } from '../reducers/cycles/actions'
 import { useApiPrivate } from '../hooks/useAxiosPrivate'
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
-import { SessionContext } from './SessionContext'
 
 interface CycleFormData {
   task: string
@@ -36,11 +34,7 @@ interface CycleContextType {
   interruptCurrentCycle: () => void
   deleteCycle: (id: string) => void
   createNewCycle: (data: CycleFormData) => void
-  fetchCycles: (
-    controller: AbortController,
-    isMounted: boolean,
-    token: string,
-  ) => void
+  fetchCycles: (controller: AbortController, isMounted: boolean) => void
 }
 
 interface CycleContextProviderProps {
@@ -53,9 +47,7 @@ export const CycleContextProvider = ({
   children,
 }: CycleContextProviderProps) => {
   const apiPrivate = useApiPrivate()
-  // const navigate = useNavigate()
-
-  const { auth } = useContext(SessionContext)
+  const navigate = useNavigate()
 
   const [isFirstLoad, setIsFirstLoad] = useState(true)
   const [cyclesState, dispatch] = useReducer(
@@ -88,7 +80,7 @@ export const CycleContextProvider = ({
       const controller = new AbortController()
       let isMounted = true
 
-      fetchCycles(controller, isMounted, auth.token)
+      fetchCycles(controller, isMounted)
 
       setIsFirstLoad(false)
 
@@ -97,7 +89,6 @@ export const CycleContextProvider = ({
         isMounted = false
       }
     } else {
-      console.log('here')
       localStorage.setItem(
         '@focus:ActiveCycleId',
         `${cyclesState.activeCycleId}`,
@@ -110,14 +101,10 @@ export const CycleContextProvider = ({
   const fetchCycles = async (
     controller: AbortController,
     isMounted: boolean,
-    token: string,
   ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/cycles', {
         signal: controller.signal,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       })
       const cycles = response.data
 
@@ -125,11 +112,12 @@ export const CycleContextProvider = ({
 
       isMounted && dispatch(intializeStateAction(cycles, activeCycleId))
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -157,11 +145,12 @@ export const CycleContextProvider = ({
 
       setAmountSecondsPassed(0)
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -178,11 +167,12 @@ export const CycleContextProvider = ({
         dispatch(deleteCycleFromHistoryAction(id))
       }
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -200,11 +190,12 @@ export const CycleContextProvider = ({
       )
       dispatch(interruptCurrentCycleAction())
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -222,11 +213,12 @@ export const CycleContextProvider = ({
       )
       dispatch(markCurrentCycleAsFinishedAction())
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }

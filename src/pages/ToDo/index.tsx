@@ -19,7 +19,6 @@ import {
 } from './styles'
 
 import todoLogo from '../../assets/todoLogo.svg'
-import { SessionContext } from '../../contexts/SessionContext'
 
 const createTaskFormValidationSchema = zod.object({
   title: zod.string().min(1, 'Enter a task!'),
@@ -30,7 +29,6 @@ type NewTaskFormData = zod.infer<typeof createTaskFormValidationSchema>
 export const ToDo = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const { auth } = useContext(SessionContext)
   const { tasks, createTask, countDoneTasks, fetchTasks } =
     useContext(TaskContext)
 
@@ -47,7 +45,7 @@ export const ToDo = () => {
       setIsLoading(true)
       await createTask(data)
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setIsLoading(false)
     }
@@ -60,7 +58,7 @@ export const ToDo = () => {
     let isMounted = true
     const controller = new AbortController()
 
-    fetchTasks(controller, isMounted, auth.token)
+    fetchTasks(controller, isMounted)
 
     return () => {
       isMounted = false

@@ -1,16 +1,15 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Camera } from 'phosphor-react'
 
-import { SessionContext } from '../../../../contexts/SessionContext'
-
 import imagePlaceholder from '../../../../assets/placeholder.png'
+import { useAuth } from '../../../../hooks/useAuth'
 
 interface AvatarUploadProps {
   handleChanges: () => void
 }
 
 export const AvatarUpload = ({ handleChanges }: AvatarUploadProps) => {
-  const { avatarUpload, user } = useContext(SessionContext)
+  const { avatarUpload, user } = useAuth()
 
   const avatarUrl = user?.avatar || imagePlaceholder
   const [avatar, setAvatar] = useState<string>('')

@@ -44,14 +44,14 @@ interface SessionContextProviderProps {
 }
 
 interface SessionContextType {
-  auth: Auth
+  auth: Auth | undefined
   user: User | undefined
   errorMessage: string
   registerNewUser: (data: NewUserFormData) => Promise<boolean | undefined>
   authUser: (data: any) => Promise<void>
   updateAuthToken: (token: string) => void
   avatarUpload: (file: File) => void
-  fetchUserData: (controller: AbortController, token: string) => void
+  fetchUserData: (controller: AbortController) => void
   updateUserProfile: (data: UserProfileData) => void
 }
 
@@ -60,7 +60,7 @@ export const SessionContext = createContext({} as SessionContextType)
 export const SessionContextProvider = ({
   children,
 }: SessionContextProviderProps) => {
-  const [auth, setAuth] = useState<Auth>({} as Auth)
+  const [auth, setAuth] = useState<Auth>()
   const [user, setUser] = useState<User>()
   const [errorMessage, setErrorMessage] = useState<string>('')
 
@@ -95,21 +95,19 @@ export const SessionContextProvider = ({
     }
   }
 
-  const fetchUserData = async (controller: AbortController, token: string) => {
+  const fetchUserData = async (controller: AbortController) => {
     try {
       const response = await apiPrivate('/users/user', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         signal: controller.signal,
       })
       setUser(response.data)
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -118,11 +116,12 @@ export const SessionContextProvider = ({
     try {
       await apiPrivate.post('/users/user', data)
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -134,11 +133,12 @@ export const SessionContextProvider = ({
 
       await apiPrivate.post('users/avatar', uploadAvatarForm)
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -168,17 +168,7 @@ export const SessionContextProvider = ({
   }
 
   const updateAuthToken = (token: string): void => {
-    setAuth((state) => {
-      if (state) {
-        return {
-          ...state,
-          token,
-        }
-      }
-      return {
-        token,
-      }
-    })
+    setAuth({ token })
   }
 
   return (

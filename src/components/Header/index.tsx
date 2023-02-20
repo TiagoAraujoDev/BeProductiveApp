@@ -11,6 +11,7 @@ import {
 } from 'phosphor-react'
 
 import { ThemeToggleContext } from '../../contexts/ThemeContext'
+import { useAuth } from '../../hooks/useAuth'
 
 import {
   HeaderContainer,
@@ -22,11 +23,10 @@ import {
 import { Avatar } from './Avatar'
 import { EditProfile } from './EditProfile'
 import { TriggerContainer } from './EditProfile/styles'
-import { SessionContext } from '../../contexts/SessionContext'
 
 export const Header = () => {
   const { changeTheme, themeName } = useContext(ThemeToggleContext)
-  const { fetchUserData, user, auth } = useContext(SessionContext)
+  const { fetchUserData, user } = useAuth()
 
   const handleChangeTheme = () => {
     changeTheme()
@@ -34,12 +34,12 @@ export const Header = () => {
 
   useEffect(() => {
     const controller = new AbortController()
-    fetchUserData(controller, auth.token)
+
+    fetchUserData(controller)
 
     return () => {
       controller.abort()
     }
-
     // eslint-disable-next-line
   }, [])
 

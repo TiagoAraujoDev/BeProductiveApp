@@ -1,15 +1,15 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'phosphor-react'
-import { ReactNode, useContext, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { AvatarUpload } from './AvatarUpload'
 import { EditProfileForm } from './EditProfileForm'
+import { useAuth } from '../../../hooks/useAuth'
 
 import { Avatar, Close, Content, Form, Ovarlay, Title } from './styles'
-import { SessionContext } from '../../../contexts/SessionContext'
 
 interface DialogProps {
   children: ReactNode
@@ -23,7 +23,7 @@ const editProfileFormValidationSchema = zod.object({
 type EditProfileFormData = zod.infer<typeof editProfileFormValidationSchema>
 
 export const EditProfile = ({ children }: DialogProps) => {
-  const { updateUserProfile } = useContext(SessionContext)
+  const { updateUserProfile } = useAuth()
   const [hasChanges, setHasChange] = useState<boolean>(false)
 
   const editProfileForm = useForm<EditProfileFormData>({

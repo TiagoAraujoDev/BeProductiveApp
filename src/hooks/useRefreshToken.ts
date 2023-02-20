@@ -1,14 +1,21 @@
+import { useNavigate } from 'react-router-dom'
+
 import { api } from '../config/api/axios'
 import { useAuth } from './useAuth'
 
 export const useRefreshToken = () => {
   const { updateAuthToken } = useAuth()
+  const navigate = useNavigate()
 
   const refresh = async () => {
     try {
-      const response = await api.post('/users/refresh-token', null, {
-        withCredentials: true,
-      })
+      const response = await api.post(
+        '/users/refresh-token',
+        {},
+        {
+          withCredentials: true,
+        },
+      )
 
       updateAuthToken(response.data.token)
       return response.data.token

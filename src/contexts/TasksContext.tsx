@@ -19,11 +19,7 @@ interface TaskFormData {
 interface TaskContextType {
   tasks: Task[]
   taskTitle: string
-  fetchTasks: (
-    controller: AbortController,
-    isMounted: boolean,
-    token: string,
-  ) => void
+  fetchTasks: (controller: AbortController, isMounted: boolean) => void
   createTask: (data: TaskFormData) => Promise<void>
   toggleTaskDoneStatus: (id: string) => Promise<void>
   deleteTask: (id: string) => Promise<void>
@@ -47,24 +43,23 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
   const fetchTasks = async (
     controller: AbortController,
     isMounted: Boolean,
-    token: string,
   ): Promise<void> => {
     try {
       const response = await apiPrivate.get('/tasks/user', {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         signal: controller.signal,
       })
 
       isMounted && setTask(response.data.userTasks)
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -79,11 +74,12 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         return [...state, newTask]
       })
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -96,11 +92,12 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         },
       })
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
@@ -118,11 +115,12 @@ export function TasksContextProvider({ children }: TaskContextProviderProps) {
         },
       )
     } catch (err: any) {
-      if (err instanceof AxiosError) {
+      if (err instanceof AxiosError && err.response?.status === 403) {
         console.log('name', err.name)
         console.log('code', err.code)
         console.log('message', err.message)
         console.log('Stack', err.stack)
+        navigate('/')
       }
     }
   }
