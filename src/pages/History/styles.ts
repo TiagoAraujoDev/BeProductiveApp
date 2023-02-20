@@ -46,22 +46,13 @@ export const StatusContainer = styled.span`
     align-items: center;
     justify-content: center;
 
-    border: 1px solid ${(props) => props.theme['gray-400']};
-    border-radius: 50%;
-
+    cursor: pointer;
     svg {
       color: ${(props) => props.theme['gray-400']};
       &:hover {
         color: ${(props) => props.theme['red-500']};
         transition: all ease-in 0.2s;
       }
-    }
-
-    &:hover {
-      cursor: pointer;
-      border: 1px solid ${(props) => props.theme['red-500']};
-      color: ${(props) => props.theme['red-500']};
-      transition: all ease-in 0.2s;
     }
   }
 `

@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns'
-import { X } from 'phosphor-react'
+import { Trash } from 'phosphor-react'
 import { useContext, useEffect } from 'react'
 
 import { CycleContext } from '../../contexts/CyclesContext'
@@ -72,7 +72,7 @@ export const History = () => {
                         className="delete"
                         onClick={() => handleDeleteCycle(cycle.id)}
                       >
-                        <X size={18} />
+                        <Trash size={24} />
                       </span>
                     </StatusContainer>
                   </td>
