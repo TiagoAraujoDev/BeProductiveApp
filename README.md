@@ -23,6 +23,8 @@
 
 <img src="./public/project_screenshots/pic_6.png">
 
+<img src="./public/project_screenshots/pic_7.png">
+
 <h3 id="pre-requisitos">Prerequisites</h3>
 
 Before starting, you will need to have the following tools installed on your machine:
@@ -47,7 +49,7 @@ if you want to run the app in your machine, follow the steps above:
 
 <h3 id="objetivo">🎯 Goals</h3>
 
-- In this project I wanted to create a productivity app the help me to organize my to-dos and get focus.
+- In this project I wanted to create a productivity app that help me to organize my to-dos and get focus.
 - To build this application I used Reactjs to create a SPA(single page application) and all the authentication and data persistence It's been manage by Focus_API.
 - All the authentication is made using JWT and with refresh-token strategy. When the user loggin the api sends a response with an access token and a refresh-token, but the refresh-token is sent in a httpOnly cookie. The access token is saved on the application memory and I made a custom hook that makes a request to the refresh-token endpoint to refresh the access token when the user closes and refresh the page. So that way the don't need to save the access token in localstorage or in database. When the refresh-token expires the application send the user to the loggin and the cycle restart.
 - The most important technologies used in this app were vite to create a good development environment and some important libraries such as react-hook-form to manage forms, zod to help with form validation and typing integration, the contextAPI to share to information and keep all the components more readable for refactor, changes and improvements, styled-components gives to the app styles and keep it scoped and react-router-dom to create routes and the strategy to persist the user session and verify if there's a session.
